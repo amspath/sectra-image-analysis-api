@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling>=1.25", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sectra_image_analysis_API"
+dynamic = ["version"]
+description = "A wrapper for the Sectra Image Analysis API."
+requires-python = "~=3.11"
+authors = [{ name = "Robin van Hoorn", email = "r.d.vanhoorn@amsterdamumc.nl" }]
+dependencies = ["hl7", "pydantic", "requests"]
+
+[project.optional-dependencies]
+dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.vcs]
+# Strip leading "v" from tags like "v0.1.0"
+tag-pattern = "v(?P<base>.*)"
+raw-options = { version_scheme = "release-branch-semver" }
+
+local_scheme = "node-and-date"
+[tool.hatch.build.targets.wheel]
+packages = ["src/sectra_client"]
+
+[tool.hatch.build]
+exclude = [".vscode", ".git", "__pycache__"]
+
+[tool.ruff]
+line-length = 120
+select = ["E", "F", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = true
+docstring-code-format = false
