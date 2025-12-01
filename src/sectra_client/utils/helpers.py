@@ -18,11 +18,7 @@ def connection_retry():
                     return fn(*args, **kwargs)
                 except ConnectionError:
                     delay = 2**trial
-                    logger.warning(
-                        "DPAT connection error trial %s/5, retrying in %ss",
-                        trial,
-                        delay,
-                    )
+                    logger.warning("Sectra connection error trial %s/5, retrying in %ss", trial, delay)
                     trial += 1
                     time.sleep(delay)
             logger.error("Request failed after 5 trials")

@@ -2,8 +2,8 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
-from sectra_client.ai.schemas.common import DisplayedName, Size
-from sectra_client.ai.schemas.quality_control import QualityControlData
+from sectra_client.schemas.common import DisplayedName, Size
+from sectra_client.schemas.quality_control import QualityControlData
 
 
 class FocalPlane(BaseModel):

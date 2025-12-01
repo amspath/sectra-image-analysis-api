@@ -1,5 +1,5 @@
-class DPATRequestError(Exception):
-    """Exception raised when a request to DPAT has failed."""
+class SectraRequestError(Exception):
+    """Exception raised when a request to Sectra has failed."""
 
     __slots__ = ("status_code", "text", "path")
 

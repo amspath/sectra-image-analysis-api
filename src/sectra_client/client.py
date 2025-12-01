@@ -4,17 +4,17 @@ from typing import Optional, cast
 import requests
 
 from sectra_client.schemas import ApplicationInfo, CaseImageInfo, ImageInfo, QualityControl, Result, ResultResponse
-from sectra_client.utils.errors import DPATRequestError
+from sectra_client.utils.errors import SectraRequestError
 from sectra_client.utils.helpers import JSONPayload, connection_retry
 
 logger = logging.getLogger(__name__)
 
 
-class DPATAIClient:
+class SectraClient:
     """Class managing connection and requests to DPAT server AI API.
 
     Args:
-        url (str): URL of the DPAT server
+        url (str): URL of the sectra server
         token (str): Callback token
         app_id (str): Registered application id
 
@@ -47,7 +47,7 @@ class DPATAIClient:
         url = f"{self._url}{path}"
         resp = requests.get(url, params=kwargs, headers=self._headers)
         if resp.status_code != 200:
-            raise DPATRequestError(resp.status_code, resp.text, path)
+            raise SectraRequestError(resp.status_code, resp.text, path)
         return resp.json()
 
     @connection_retry()
@@ -66,7 +66,7 @@ class DPATAIClient:
         url = f"{self._url}{path}"
         resp = requests.post(url, json=payload, headers=self._headers)
         if resp.status_code != 201:
-            raise DPATRequestError(resp.status_code, resp.text, path)
+            raise SectraRequestError(resp.status_code, resp.text, path)
         if parse_response:
             return resp.json()
         return None
@@ -87,7 +87,7 @@ class DPATAIClient:
         url = f"{self._url}{path}"
         resp = requests.put(url, json=values, headers=self._headers)
         if resp.status_code != 200:
-            raise DPATRequestError(resp.status_code, resp.text, path)
+            raise SectraRequestError(resp.status_code, resp.text, path)
         if parse_response:
             return resp.json()
         return None
