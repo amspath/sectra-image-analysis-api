@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel
 
-from sectra_client.ai.schemas.common import Point, Polygon
+from sectra_client.schemas.common import Point, Polygon
 
 
 class Style(BaseModel):

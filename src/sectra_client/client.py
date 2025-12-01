@@ -3,9 +3,9 @@ from typing import Optional, cast
 
 import requests
 
-from sectra_client.ai.schemas import ApplicationInfo, CaseImageInfo, ImageInfo, QualityControl, Result, ResultResponse
-from sectra_client.errors import DPATRequestError
-from sectra_client.helpers import JSONPayload, connection_retry
+from sectra_client.schemas import ApplicationInfo, CaseImageInfo, ImageInfo, QualityControl, Result, ResultResponse
+from sectra_client.utils.errors import DPATRequestError
+from sectra_client.utils.helpers import JSONPayload, connection_retry
 
 logger = logging.getLogger(__name__)
 

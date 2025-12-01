@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from sectra_client.ai.schemas.common import Context, InputType
+from sectra_client.schemas.common import Context, InputType
 
 
 class TaggedPolygonInputContent(BaseModel):
