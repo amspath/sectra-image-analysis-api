@@ -1,9 +1,12 @@
 import logging
+from io import BytesIO
 from typing import Optional, cast
 
 import requests
+from PIL import Image
 
 from sectra_client.schemas import ApplicationInfo, CaseImageInfo, ImageInfo, QualityControl, Result, ResultResponse
+from sectra_client.schemas.image import LabelImage
 from sectra_client.utils.errors import SectraRequestError
 from sectra_client.utils.helpers import JSONPayload, connection_retry
 
@@ -19,19 +22,19 @@ class SectraClient:
         app_id (str): Registered application id
 
     Attributes:
-        dpat_version (ApplicationInfo): Versions of the DPAT server
+        version_info (ApplicationInfo): Versions of the DPAT server
     """
 
-    __slots__ = ("_url", "_token", "dpat_version", "_headers", "_app_id")
+    __slots__ = ("_url", "_token", "version_info", "_headers", "_app_id")
 
     def __init__(self, url: str, token: str, app_id: str) -> None:
         self._url = url
         self._token = token
         self._app_id = app_id
         self._headers = {"Authorization": f"Bearer {token}"}
-        self.dpat_version = self._retrieve_dpat_versions()
+        self.version_info = self._retrieve_version_info()
 
-    def _retrieve_dpat_versions(self) -> ApplicationInfo:
+    def _retrieve_version_info(self) -> ApplicationInfo:
         """Retrieves the versions of DPAT from the server."""
 
         versions = ApplicationInfo(**cast(dict, self._get("/info")))
@@ -42,17 +45,25 @@ class SectraClient:
 
     @connection_retry()
     def _get(self, path: str, **kwargs) -> JSONPayload:
-        """Runs a GET request to DPAT. Named args are query parameters."""
-
+        """Runs a GET request to Sectra. Named args are query parameters."""
         url = f"{self._url}{path}"
         resp = requests.get(url, params=kwargs, headers=self._headers)
         if resp.status_code != 200:
             raise SectraRequestError(resp.status_code, resp.text, path)
         return resp.json()
+    
+    @connection_retry()
+    def _get_raw(self, path: str, **kwargs) -> requests.Response:
+        """Runs a GET request to Sectra and returns the raw response. Named args are query parameters."""
+        url = f"{self._url}{path}"
+        resp = requests.get(url, params=kwargs, headers=self._headers)
+        if resp.status_code != 200:
+            raise SectraRequestError(resp.status_code, resp.text, path)
+        return resp
 
     @connection_retry()
     def _post(self, path: str, payload: JSONPayload, parse_response: bool = True) -> Optional[JSONPayload]:
-        """Runs a POST request to DPAT.
+        """Runs a POST request to Sectra.
 
         Args:
             path (str): Request path
@@ -73,7 +84,7 @@ class SectraClient:
 
     @connection_retry()
     def _put(self, path: str, values: JSONPayload, parse_response: bool = True) -> Optional[JSONPayload]:
-        """Runs a PUT request to DPAT.
+        """Runs a PUT request to Sectra.
 
         Args:
             path (str): Request path
@@ -95,7 +106,7 @@ class SectraClient:
     def get_image_infos_in_case(
         self, accession_number: str, phi: bool = False, accession_number_issuer_id: Optional[str] = None
     ) -> list[CaseImageInfo]:
-        """Retrieves all slides in a case. Available from IA-API 1.9 (DPAT 4.1).
+        """Retrieves all slides in a case. Available from IA-API 1.9 (Sectra 4.1).
 
         Args:
             accession_number (str): Accession number of the case
@@ -118,7 +129,7 @@ class SectraClient:
     def get_image_infos_in_case_by_slide_id(
         self, slide_id: str, phi: bool = False, accession_number_issuer_id: Optional[str] = None
     ) -> list[CaseImageInfo]:
-        """Retrieves all slides in the case a slide belongs to. Available from IA-API 1.9 (DPAT 4.1).
+        """Retrieves all slides in the case a slide belongs to. Available from IA-API 1.9 (Sectra 4.1).
 
         Args:
             slide_id (str): Id of the slide
@@ -158,15 +169,27 @@ class SectraClient:
         if phi:
             params["includePHI"] = "true"
         return ImageInfo(**cast(dict, self._get(path, **params)))
+    
+    def get_label_image(self, slide_id: str) -> LabelImage:
+        """Retrieves the label image for a slide.
+
+        Args:
+            slide_id (str): Id of the slide to retrieve the label image for
+        Returns:
+            LabelImage: Label image data
+        """
+        path = f"/slides/{slide_id}/label"
+        resp = self._get_raw(path)
+        return LabelImage(image=resp.content)
 
     def create_results(self, results: Result) -> ResultResponse:
-        """Creates a result in DPAT.
+        """Creates a result in Sectra.
 
         Args:
             results (Result): Results payload
 
         Returns:
-            ResultResponse: Parsed DPAT response.
+            ResultResponse: Parsed Sectra response.
         """
         path = f"/applications/{self._app_id}/results"
         resp = self._post(path, results.model_dump())
@@ -199,7 +222,7 @@ class SectraClient:
         return ResultResponse(**cast(dict, resp))
 
     def set_quality_control(self, slide_id: str, quality_control: QualityControl) -> None:
-        """Sets quality control for a slide. Available from IA-API 1.10 (DPAT 4.2).
+        """Sets quality control for a slide. Available from IA-API 1.10 (Sectra 4.2).
 
         Args:
             slide_id (str): Id of the slide to set quality control for

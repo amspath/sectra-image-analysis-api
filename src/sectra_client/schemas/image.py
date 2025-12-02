@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from sectra_client.schemas.common import DisplayedName, Size
 from sectra_client.schemas.quality_control import QualityControlData
+from sectra_client.utils.decode_images import JPEGImage
 
 
 class FocalPlane(BaseModel):
@@ -79,3 +80,7 @@ class CaseImageInfo(BaseModel):
     specimen: Optional[Specimen] = None
     seriesInstanceUid: Optional[str] = None
     lisSlideId: Optional[str] = None
+
+class LabelImage(BaseModel, JPEGImage):
+    """Model for label images."""
+    image: bytes
