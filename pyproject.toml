@@ -3,7 +3,7 @@ requires = ["hatchling>=1.25", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sectra_image_analysis_API"
+name = "sectra_ia_api_client"
 dynamic = ["version"]
 description = "A wrapper for the Sectra Image Analysis API."
 requires-python = "~=3.11"

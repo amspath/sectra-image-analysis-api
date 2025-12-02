@@ -15,67 +15,46 @@ logger = logging.getLogger(__name__)
 
 
 class SectraClient:
-    """Class managing connection and requests to DPAT server AI API.
-
-    Args:
-        url (str): URL of the sectra server
-        token (str): Callback token
-        app_id (str): Registered application id
-
-    Attributes:
-        version_info (ApplicationInfo): Versions of the DPAT server
-    """
-
-    __slots__ = ("_url", "_token", "version_info", "_headers")
+    __slots__ = ("_url", "_token", "version_info", "_headers", "_session")
 
     def __init__(self, url: str, token: str) -> None:
         self._url = url
         self._token = token
         self._headers = {"Authorization": f"Bearer {token}"}
+
+        # Create session *before* version info so you can reuse it there too if you like
+        self._session = requests.Session()
+        self._session.headers.update(self._headers)
+
         self.version_info = self._retrieve_version_info()
 
-    def _retrieve_version_info(self) -> ApplicationInfo:
-        """Retrieves the versions of DPAT from the server."""
+    def __enter__(self) -> "SectraClient":
+        return self
 
-        versions = ApplicationInfo(**cast(dict, self._get("/info")))
-        self._headers.update(
-            {"X-Sectra-ApiVersion": versions.apiVersion, "X-Sectra-SoftwareVersion": versions.softwareVersion}
-        )
-        return versions
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        # Make sure to close the session
+        self._session.close()
 
     @connection_retry()
     def _get(self, path: str, **kwargs) -> JSONPayload:
-        """Runs a GET request to Sectra. Named args are query parameters."""
         url = f"{self._url}{path}"
-        resp = requests.get(url, params=kwargs, headers=self._headers)
+        resp = self._session.get(url, params=kwargs)  # headers already on session
         if resp.status_code != 200:
             raise SectraRequestError(resp.status_code, resp.text, path)
         return resp.json()
-    
+
     @connection_retry()
     def _get_raw(self, path: str, **kwargs) -> requests.Response:
-        """Runs a GET request to Sectra and returns the raw response. Named args are query parameters."""
         url = f"{self._url}{path}"
-        resp = requests.get(url, params=kwargs, headers=self._headers)
+        resp = self._session.get(url, params=kwargs)
         if resp.status_code != 200:
             raise SectraRequestError(resp.status_code, resp.text, path)
         return resp
 
     @connection_retry()
     def _post(self, path: str, payload: JSONPayload, parse_response: bool = True) -> Optional[JSONPayload]:
-        """Runs a POST request to Sectra.
-
-        Args:
-            path (str): Request path
-            payload (JSONPayload): Body
-            parse_response (bool): Whether the response should be parsed as JSON or not.
-                Defaults to True.
-
-        Returns:
-            Optional[JSONPayload]: Response, if parse_response is True.
-        """
         url = f"{self._url}{path}"
-        resp = requests.post(url, json=payload, headers=self._headers)
+        resp = self._session.post(url, json=payload)
         if resp.status_code != 201:
             raise SectraRequestError(resp.status_code, resp.text, path)
         if parse_response:
@@ -84,24 +63,26 @@ class SectraClient:
 
     @connection_retry()
     def _put(self, path: str, values: JSONPayload, parse_response: bool = True) -> Optional[JSONPayload]:
-        """Runs a PUT request to Sectra.
-
-        Args:
-            path (str): Request path
-            payload (JSONPayload): Body
-            parse_response (bool): Whether the response should be parsed as JSON or not.
-                Defaults to True.
-
-        Returns:
-            Optional[JSONPayload]: Response, if parse_response is True.
-        """
         url = f"{self._url}{path}"
-        resp = requests.put(url, json=values, headers=self._headers)
+        resp = self._session.put(url, json=values)
         if resp.status_code != 200:
             raise SectraRequestError(resp.status_code, resp.text, path)
         if parse_response:
             return resp.json()
         return None
+    
+    def _retrieve_version_info(self) -> ApplicationInfo:
+        """Retrieves the versions of DPAT from the server."""
+
+        versions = ApplicationInfo(**cast(dict, self._get("/info")))
+        self._headers.update(
+            {"X-Sectra-ApiVersion": versions.apiVersion, "X-Sectra-SoftwareVersion": versions.softwareVersion}
+        )
+        return versions
+    
+    def close(self) -> None:
+        """Closes the SectraClient session."""
+        self._session.close()
 
     def get_image_infos_in_case(
         self, accession_number: str, phi: bool = False, accession_number_issuer_id: Optional[str] = None
