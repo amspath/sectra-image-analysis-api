@@ -1,9 +1,10 @@
 import logging
-from io import BytesIO
+import pathlib
+import re
 from typing import Optional, cast
 
 import requests
-from PIL import Image
+from requests_toolbelt.multipart import decoder
 
 from sectra_client.schemas import ApplicationInfo, CaseImageInfo, ImageInfo, QualityControl, Result, ResultResponse
 from sectra_client.schemas.image import LabelImage
@@ -181,6 +182,61 @@ class SectraClient:
         path = f"/slides/{slide_id}/label"
         resp = self._get_raw(path)
         return LabelImage(image=resp.content)
+    
+    def download_slide_files(
+        self,
+        slide_id: str,
+        output_dir: pathlib.Path | str,
+    ) -> list[pathlib.Path]:
+        """Download and store all files associated with a slide.
+
+        This calls `/slides/{slide_id}/files`, decodes the multipart response,
+        and writes each part to disk. Filenames are taken from the
+        Content-Disposition header when available; otherwise a fallback name
+        is generated.
+
+        Args:
+            slide_id: Id of the slide to download files for.
+            output_dir: Directory where files will be stored. Created if needed.
+
+        Returns:
+            List of paths to the written files.
+        """
+        path = f"/slides/{slide_id}/files"
+        resp = self._get_raw(path)
+
+        multipart_data = decoder.MultipartDecoder.from_response(resp)
+
+        output_path = pathlib.Path(output_dir)
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        written_files: list[pathlib.Path] = []
+
+        api_version = resp.headers.get("X-Sectra-ApiVersion", "unknown")
+
+        for i, part in enumerate(multipart_data.parts):
+            # Decode headers to text and normalise keys
+            headers = {k.decode().lower(): v.decode() for k, v in part.headers.items()}
+            disp = headers.get("content-disposition", "")
+
+            # Try to extract filename from Content-Disposition
+            m = re.search(r'filename="([^"]+)"', disp)
+            if m:
+                filename = m.group(1)
+            else:
+                raise AttributeError("Missing filename in Content-Disposition header for slide",
+                                      f"{slide_id} part {i} (API version: {api_version})")
+
+            file_path = output_path / filename
+
+            with file_path.open("wb") as f:
+                f.write(part.content)
+
+            logger.info("Wrote slide file: %s", file_path)
+            written_files.append(file_path)
+
+        return written_files
+
 
     def create_results(self, results: Result) -> ResultResponse:
         """Creates a result in Sectra.
@@ -205,7 +261,7 @@ class SectraClient:
             ResultResponse: Retrieved results.
         """
         path = f"/application/{self._app_id}/results/{id}"
-        return ResultResponse(**self._get(path))  # type: ignore
+        return ResultResponse(**self._get(path))
 
     def update_results(self, id: str, results: Result) -> ResultResponse:
         """Update existing results.
