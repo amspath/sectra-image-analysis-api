@@ -26,12 +26,11 @@ class SectraClient:
         version_info (ApplicationInfo): Versions of the DPAT server
     """
 
-    __slots__ = ("_url", "_token", "version_info", "_headers", "_app_id")
+    __slots__ = ("_url", "_token", "version_info", "_headers")
 
-    def __init__(self, url: str, token: str, app_id: str) -> None:
+    def __init__(self, url: str, token: str) -> None:
         self._url = url
         self._token = token
-        self._app_id = app_id
         self._headers = {"Authorization": f"Bearer {token}"}
         self.version_info = self._retrieve_version_info()
 
@@ -238,7 +237,7 @@ class SectraClient:
         return written_files
 
 
-    def create_results(self, results: Result) -> ResultResponse:
+    def create_results(self, app_id: str, results: Result) -> ResultResponse:
         """Creates a result in Sectra.
 
         Args:
@@ -247,33 +246,34 @@ class SectraClient:
         Returns:
             ResultResponse: Parsed Sectra response.
         """
-        path = f"/applications/{self._app_id}/results"
+        path = f"/applications/{app_id}/results"
         resp = self._post(path, results.model_dump())
         return ResultResponse(**cast(dict, resp))
 
-    def get_results(self, id: str) -> ResultResponse:
+    def get_results(self, wsi_id: str, app_id: str) -> ResultResponse:
         """Retrieves results.
 
         Args:
-            id (str): Results id
-
+            wsi_id (str): Results id
+            app_id (str): Application id
         Returns:
             ResultResponse: Retrieved results.
         """
-        path = f"/application/{self._app_id}/results/{id}"
+        path = f"/applications/{app_id}/results/{wsi_id}"
         return ResultResponse(**self._get(path))
 
-    def update_results(self, id: str, results: Result) -> ResultResponse:
+    def update_results(self, wsi_id: str, app_id: str,results: Result) -> ResultResponse:
         """Update existing results.
 
         Args:
-            id (str): Results id
+            wsi_id (str): wsi id
+            app_id (str): Application id
             results (Result): Updated values
 
         Returns:
             ResultResponse: Updated results
         """
-        path = f"/application/{self._app_id}/results/{id}"
+        path = f"/applications/{app_id}/results/{wsi_id}"
         resp = self._put(path, results.model_dump())
         return ResultResponse(**cast(dict, resp))
 
