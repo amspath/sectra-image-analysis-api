@@ -6,7 +6,7 @@ from typing import Optional, cast
 import requests
 from requests_toolbelt.multipart import decoder
 
-from sectra_client.schemas import ApplicationInfo, CaseImageInfo, ImageInfo, QualityControl, Result, ResultResponse
+from sectra_client.schemas import ApplicationInfo, CaseImageInfo, ImageMetadata, QualityControl, Result, ResultResponse
 from sectra_client.schemas.image import LabelImage
 from sectra_client.utils.errors import SectraRequestError
 from sectra_client.utils.helpers import JSONPayload, connection_retry
@@ -149,8 +149,8 @@ class SectraClient:
             params["accessionNumberIssuerId"] = accession_number_issuer_id
         return [CaseImageInfo(**img) for img in cast(list[dict], self._get(path, **params))]
 
-    def get_image_info(self, slide_id: str, extended: bool = False, phi: bool = False) -> ImageInfo:
-        """Retrieves a slide info from its id.
+    def get_image_metadata(self, slide_id: str, extended: bool = False, phi: bool = False) -> ImageMetadata:
+        """Retrieves a slide metadata from its slide_id.
 
         Args:
             slide_id (str): Id of the slide to retrieve info from
@@ -160,7 +160,7 @@ class SectraClient:
                 Defaults to False.
 
         Returns:
-            ImageInfo: Requested slide info
+            ImageMetadata: Requested slide info
         """
         path = f"/slides/{slide_id}/info"
         params: dict[str, str] = {}
@@ -168,7 +168,7 @@ class SectraClient:
             params["scope"] = "extended"
         if phi:
             params["includePHI"] = "true"
-        return ImageInfo(**cast(dict, self._get(path, **params)))
+        return ImageMetadata(**cast(dict, self._get(path, **params)))
     
     def get_label_image(self, slide_id: str) -> LabelImage:
         """Retrieves the label image for a slide.
@@ -235,7 +235,6 @@ class SectraClient:
             written_files.append(file_path)
 
         return written_files
-
 
     def create_results(self, app_id: str, results: Result) -> ResultResponse:
         """Creates a result in Sectra.

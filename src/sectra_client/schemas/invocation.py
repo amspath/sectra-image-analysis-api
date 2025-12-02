@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, model_validator
 
 from sectra_client.schemas.common import CallbackInfo, Context, InputType, Polygon
-from sectra_client.schemas.image import ImageInfo
+from sectra_client.schemas.image import ImageMetadata
 from sectra_client.schemas.results import ResultResponse
 
 
@@ -76,4 +76,4 @@ class Invocation(InvocationBase):
 class ImageNotification(InvocationBase):
     """Model for new image notification from DPAT."""
 
-    imageInfo: ImageInfo
+    imageInfo: ImageMetadata

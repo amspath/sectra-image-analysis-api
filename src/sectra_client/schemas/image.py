@@ -41,7 +41,7 @@ class Specimen(BaseModel):
     description: Optional[str] = None
 
 
-class ImageInfo(BaseModel):
+class ImageMetadata(BaseModel):
     """Model for images information."""
 
     id: str
