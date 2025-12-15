@@ -2,6 +2,7 @@ import logging
 import pathlib
 import re
 from typing import Optional, cast
+from urllib.parse import urlsplit, urlunsplit
 
 import requests
 from requests_toolbelt.multipart import decoder
@@ -18,11 +19,19 @@ class SectraClient:
     __slots__ = ("_url", "_token", "version_info", "_headers", "_session")
 
     def __init__(self, url: str, token: str) -> None:
-        self._url = url
+        # Normalize base url
+        parts = urlsplit(url.strip())
+
+        scheme = parts.scheme
+        if scheme == "http" or scheme == "":
+            scheme = "https"
+
+        base = urlunsplit((scheme, parts.netloc, parts.path.rstrip("/"), parts.query, parts.fragment))
+        self._url = base
+
         self._token = token
         self._headers = {"Authorization": f"Bearer {token}"}
 
-        # Create session *before* version info so you can reuse it there too if you like
         self._session = requests.Session()
         self._session.headers.update(self._headers)
 
@@ -70,7 +79,7 @@ class SectraClient:
         if parse_response:
             return resp.json()
         return None
-    
+
     def _retrieve_version_info(self) -> ApplicationInfo:
         """Retrieves the versions of DPAT from the server."""
 
@@ -78,8 +87,11 @@ class SectraClient:
         self._headers.update(
             {"X-Sectra-ApiVersion": versions.apiVersion, "X-Sectra-SoftwareVersion": versions.softwareVersion}
         )
+        self._session.headers.update(
+            {"X-Sectra-ApiVersion": versions.apiVersion, "X-Sectra-SoftwareVersion": versions.softwareVersion}
+        )
         return versions
-    
+
     def close(self) -> None:
         """Closes the SectraClient session."""
         self._session.close()
@@ -150,7 +162,7 @@ class SectraClient:
         if phi:
             params["includePHI"] = "true"
         return ImageMetadata(**cast(dict, self._get(path, **params)))
-    
+
     def get_label_image(self, slide_id: str) -> LabelImage:
         """Retrieves the label image for a slide.
 
@@ -162,12 +174,8 @@ class SectraClient:
         path = f"/slides/{slide_id}/label"
         resp = self._get_raw(path)
         return LabelImage(image=resp.content)
-    
-    def download_slide_files(
-        self,
-        slide_id: str,
-        output_dir: pathlib.Path | str,
-    ) -> list[pathlib.Path]:
+
+    def download_slide_files(self, slide_id: str, output_dir: pathlib.Path | str) -> list[pathlib.Path]:
         """Download and store all files associated with a slide.
 
         This calls `/slides/{slide_id}/files`, decodes the multipart response,
@@ -204,8 +212,10 @@ class SectraClient:
             if m:
                 filename = m.group(1)
             else:
-                raise AttributeError("Missing filename in Content-Disposition header for slide",
-                                      f"{slide_id} part {i} (API version: {api_version})")
+                raise AttributeError(
+                    "Missing filename in Content-Disposition header for slide",
+                    f"{slide_id} part {i} (API version: {api_version})",
+                )
 
             file_path = output_path / filename
 
@@ -242,7 +252,7 @@ class SectraClient:
         path = f"/applications/{app_id}/results/{wsi_id}"
         return ResultResponse(**self._get(path))
 
-    def update_results(self, wsi_id: str, app_id: str,results: Result) -> ResultResponse:
+    def update_results(self, wsi_id: str, app_id: str, results: Result) -> ResultResponse:
         """Update existing results.
 
         Args:
