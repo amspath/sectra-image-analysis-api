@@ -15,6 +15,7 @@ class Action(str, Enum):
     CREATE = "create"
     MODIFY = "modify"
     CANCEL = "cancel"
+    DELETE = "delete"
 
 
 class TaggedPolygonContent(BaseModel):
