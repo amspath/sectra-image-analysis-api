@@ -71,6 +71,10 @@ class Invocation(InvocationBase):
     def validate_input(self) -> "Invocation":
         if self.action != Action.CANCEL and self.input is None:
             raise ValueError("input must not be None when action is not cancel")
+
+        if self.action != Action.DELETE and self.cancellationToken is None:
+            raise ValueError("cancellationToken must be defined when action is not delete")
+
         return self
 
 
