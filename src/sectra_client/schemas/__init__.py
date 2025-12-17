@@ -5,6 +5,7 @@ from .invocation import Action, CreateInput, ImageNotification, Invocation, Mult
 from .quality_control import QualityControl, QualityControlData, QualityControlStatus
 from .registration import InputTemplate, Registration, TaggedPolygonInputContent
 from .results import (
+    AdaptedResult,
     Attachment,
     AttachmentState,
     DisplayProperties,

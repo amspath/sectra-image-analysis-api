@@ -113,6 +113,10 @@ class Result(BaseModel):
     properties: DisplayProperties = Field(default_factory=dict)
 
 
+class AdaptedResult(Result):
+    versionId: str
+
+
 class ResultResponse(Result):
     """Schema for result retrieval from DPAT server."""
 

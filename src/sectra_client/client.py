@@ -1,13 +1,21 @@
 import logging
 import pathlib
 import re
-from typing import Optional, cast
+from typing import List, Optional, cast
 from urllib.parse import urlsplit, urlunsplit
 
 import requests
 from requests_toolbelt.multipart import decoder
 
-from sectra_client.schemas import ApplicationInfo, CaseImageInfo, ImageMetadata, QualityControl, Result, ResultResponse
+from sectra_client.schemas import (
+    AdaptedResult,
+    ApplicationInfo,
+    CaseImageInfo,
+    ImageMetadata,
+    QualityControl,
+    Result,
+    ResultResponse,
+)
 from sectra_client.schemas.image import LabelImage
 from sectra_client.utils.errors import SectraRequestError
 from sectra_client.utils.helpers import JSONPayload, connection_retry
@@ -240,7 +248,20 @@ class SectraClient:
         resp = self._post(path, results.model_dump())
         return ResultResponse(**cast(dict, resp))
 
-    def get_results(self, wsi_id: str, app_id: str) -> ResultResponse:
+    def get_result_by_result_id(self, app_id: str, result_id: int) -> ResultResponse:
+        """Retrieves a result by its result id.
+
+        Args:
+            app_id (str): Application id
+            result_id (str): Result id
+        Returns:
+            ResultResponse: Retrieved result.
+        """
+        path = f"/applications/{app_id}/results/{result_id}"
+        resp = self._get(path)
+        return ResultResponse(**cast(dict, resp))
+
+    def get_all_results(self, wsi_id: str, app_id: str) -> List[ResultResponse]:
         """Retrieves results.
 
         Args:
@@ -249,22 +270,23 @@ class SectraClient:
         Returns:
             ResultResponse: Retrieved results.
         """
-        path = f"/applications/{app_id}/results/{wsi_id}"
-        return ResultResponse(**self._get(path))
+        path = f"/applications/{app_id}/results/slide/{wsi_id}"
+        resp = self._get(path)
+        return [ResultResponse(**cast(dict, r)) for r in cast(list[dict], resp)]
 
-    def update_results(self, wsi_id: str, app_id: str, results: Result) -> ResultResponse:
+    def update_results(self, app_id: str, result_id: int, result: AdaptedResult) -> ResultResponse:
         """Update existing results.
 
         Args:
-            wsi_id (str): wsi id
             app_id (str): Application id
-            results (Result): Updated values
+            result_id (int): Result id
+            result (AdaptedResult): Updated result data
 
         Returns:
             ResultResponse: Updated results
         """
-        path = f"/applications/{app_id}/results/{wsi_id}"
-        resp = self._put(path, results.model_dump())
+        path = f"/applications/{app_id}/results/{result_id}"
+        resp = self._put(path, result.model_dump())
         return ResultResponse(**cast(dict, resp))
 
     def set_quality_control(self, slide_id: str, quality_control: QualityControl) -> None:
