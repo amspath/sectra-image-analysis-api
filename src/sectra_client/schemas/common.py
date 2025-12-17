@@ -1,5 +1,5 @@
 from enum import Enum, unique
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel
 
@@ -9,13 +9,6 @@ class CallbackInfo(BaseModel):
 
     url: str
     token: str
-
-
-class Context(BaseModel):
-    """Model for analysis context."""
-
-    useGPU: Optional[str] = None
-    seedValue: int = 666
 
 
 @unique

@@ -1,9 +1,9 @@
 from enum import Enum, unique
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, Field, model_validator
 
-from sectra_client.schemas.common import CallbackInfo, Context, InputType, Polygon
+from sectra_client.schemas.common import CallbackInfo, InputType, Polygon
 from sectra_client.schemas.image import ImageMetadata
 from sectra_client.schemas.results import ResultResponse
 
@@ -57,7 +57,7 @@ class InvocationBase(BaseModel):
     applicationId: str
     slideId: str
     callbackInfo: CallbackInfo
-    context: Optional[Context] = None
+    context: Dict[str, Any] = Field(default_factory=dict)
     cancellationToken: Optional[str] = None
 
 

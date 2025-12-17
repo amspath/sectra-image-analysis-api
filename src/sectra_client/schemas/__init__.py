@@ -1,4 +1,4 @@
-from .common import CallbackInfo, Context, DisplayedName, InputType, Point, Polygon, Size
+from .common import CallbackInfo, DisplayedName, InputType, Point, Polygon, Size
 from .image import CaseImageInfo, FocalPlane, ImageMetadata, OpticalPath, SlideFormat, Specimen, TileFormat
 from .info import ApplicationInfo
 from .invocation import Action, CreateInput, ImageNotification, Invocation, MultiAreaContent, TaggedPolygonContent

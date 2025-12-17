@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from sectra_client.schemas.common import DisplayedName, Size
 from sectra_client.schemas.quality_control import QualityControlData
@@ -70,7 +70,7 @@ class ImageMetadata(BaseModel):
     studyInstanceUid: Optional[str] = None
     examId: Optional[str] = None
     examDateTime: Optional[str] = None
-    examFreeFields: Optional[List[Dict[str, str]]] = None
+    examFreeFields: List[Dict[str, str]] = Field(default_factory=list)
 
 
 class CaseImageInfo(BaseModel):
@@ -81,6 +81,8 @@ class CaseImageInfo(BaseModel):
     seriesInstanceUid: Optional[str] = None
     lisSlideId: Optional[str] = None
 
+
 class LabelImage(BaseModel, JPEGImage):
     """Model for label images."""
+
     image: bytes

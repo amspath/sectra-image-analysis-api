@@ -31,9 +31,9 @@ class PrimitiveItem(BaseModel):
     """Model for polygon primitive content item."""
 
     style: Optional[Style] = None
-    polygons: Optional[List[Polygon]] = None
-    polylines: Optional[List[Polyline]] = None
-    labels: Optional[List[Label]] = None
+    polygons: List[Polygon] = Field(default_factory=list)
+    polylines: List[Polyline] = Field(default_factory=list)
+    labels: List[Label] = Field(default_factory=list)
 
 
 class Patch(BaseModel):
@@ -84,7 +84,7 @@ DisplayProperties = Dict[str, Union[str, int, float]]
 class ResultData(BaseModel):
     """Schema for data field in results."""
 
-    context: Dict[str, Any] = {}
+    context: Dict[str, Any] = Field(default_factory=dict)
     result: ResultContent
 
 
@@ -108,7 +108,7 @@ class Result(BaseModel):
     slideId: str
     displayResult: str
     applicationVersion: str
-    attachments: Optional[List[Attachment]] = None
+    attachments: List[Attachment] = Field(default_factory=list)
     data: Union[ResultData, Dict[str, Any]] = Field(default_factory=dict)
     properties: DisplayProperties = Field(default_factory=dict)
 

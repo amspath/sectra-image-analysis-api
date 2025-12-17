@@ -1,8 +1,8 @@
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from sectra_client.schemas.common import Context, InputType
+from sectra_client.schemas.common import InputType
 
 
 class TaggedPolygonInputContent(BaseModel):
@@ -26,4 +26,4 @@ class Registration(BaseModel):
     manufacturer: str
     url: str
     inputTemplate: InputTemplate
-    context: Context
+    context: Dict[str, Any] = Field(default_factory=dict)
