@@ -104,19 +104,12 @@ class Attachment(BaseModel):
     state: AttachmentState
 
 
-class ResultBase(BaseModel):
+class Result(BaseModel):
     slideId: str
     displayResult: str
     applicationVersion: str
     attachments: Optional[List[Attachment]] = None
     data: Union[ResultData, Dict[str, Any]] = Field(default_factory=dict)
-
-
-class Result(ResultBase):
-    displayProperties: DisplayProperties = Field(default_factory=dict)
-
-
-class TemporaryResult(ResultBase):
     properties: DisplayProperties = Field(default_factory=dict)
 
 

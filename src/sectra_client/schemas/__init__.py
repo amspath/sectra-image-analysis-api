@@ -20,5 +20,4 @@ from .results import (
     ResultType,
     Status,
     Style,
-    TemporaryResult,
 )
