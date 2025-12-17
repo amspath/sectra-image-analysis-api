@@ -1,7 +1,8 @@
+from email.mime import application
 from enum import Enum, unique
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from sectra_client.schemas.common import Point, Polygon
 
@@ -104,15 +105,20 @@ class Attachment(BaseModel):
     state: AttachmentState
 
 
-class Result(BaseModel):
-    """Schema for result posting in DPAT server."""
-
+class ResultBase(BaseModel):
     slideId: str
     displayResult: str
-    displayProperties: DisplayProperties = {}
     applicationVersion: str
     attachments: Optional[List[Attachment]] = None
-    data: Union[ResultData, Dict[str, Any]] = {}
+    data: Union[ResultData, Dict[str, Any]] = Field(default_factory=dict)
+
+
+class Result(ResultBase):
+    displayProperties: DisplayProperties = Field(default_factory=dict)
+
+
+class TemporaryResult(ResultBase):
+    properties: DisplayProperties = Field(default_factory=dict)
 
 
 class ResultResponse(Result):
