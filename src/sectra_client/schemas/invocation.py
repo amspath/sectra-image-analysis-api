@@ -1,7 +1,7 @@
 from enum import Enum, unique
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_validator, field_validator
 
 from sectra_client.schemas.common import CallbackInfo, InputType, Polygon
 from sectra_client.schemas.image import ImageMetadata
@@ -60,6 +60,11 @@ class InvocationBase(BaseModel):
     context: Dict[str, Any] = Field(default_factory=dict)
     cancellationToken: Optional[str] = None
 
+    @field_validator("context", mode="before")
+    @classmethod
+    def none_to_dict(cls, v):
+        return {} if v is None else v
+
 
 class Invocation(InvocationBase):
     """Model for invocations from DPAT."""
@@ -82,3 +87,4 @@ class ImageNotification(InvocationBase):
     """Model for new image notification from DPAT."""
 
     imageInfo: ImageMetadata
+
