@@ -7,7 +7,7 @@ This python package aims to facilite the development of AI applications for Sect
 To install sectra_client:
 
 ```
-pip install "sectra_ia_api_client @ git+https://github.com/amspath/SectraImageAnalysisAPI.git"
+pip install "sectra-image-analysis-api @ git+https://github.com/amspath/sectra-image-analysis-api.git"
 ```
 
 ## Usage
