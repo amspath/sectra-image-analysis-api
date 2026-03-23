@@ -44,11 +44,14 @@ class CreateInput(BaseModel):
     type: InputType
     content: Optional[Union[TaggedPolygonContent, MultiAreaContent]] = None
 
-    @model_validator(mode="after")
-    def validate_content(self) -> "CreateInput":
-        if self.type != InputType.WHOLE_SLIDE and self.content is None:
+    @model_validator(mode="before")
+    @classmethod
+    def validate_content(cls, values) -> dict:
+        if values.get("type") == InputType.WHOLE_SLIDE:
+            values["content"] = None  # strip it before union resolution
+        elif values.get("content") is None:
             raise ValueError("content must be defined when type is not wholeSlide")
-        return self
+        return values
 
 
 class InvocationBase(BaseModel):
@@ -87,4 +90,3 @@ class ImageNotification(InvocationBase):
     """Model for new image notification from DPAT."""
 
     imageInfo: ImageMetadata
-
