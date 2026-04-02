@@ -11,7 +11,7 @@ authors = [{ name = "Robin van Hoorn", email = "r.d.vanhoorn@amsterdamumc.nl" }]
 dependencies = ["hl7", "pydantic", "requests", "requests_toolbelt", "pillow"]
 
 [project.optional-dependencies]
-dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4", "ty"]
+dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4", "ty", "fastapi[standard]", "ipykernel"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
@@ -33,10 +33,11 @@ exclude = [".vscode", ".git", "__pycache__"]
 
 [tool.ruff]
 line-length = 120
+
+[tool.ruff.lint]
 select = ["E", "F", "I"]
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-skip-magic-trailing-comma = true
 docstring-code-format = false

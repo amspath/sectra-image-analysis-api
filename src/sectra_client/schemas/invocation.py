@@ -1,17 +1,17 @@
 from enum import Enum, unique
-from typing import Any, Dict, List, Optional, Union
+from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, model_validator
 
 from sectra_client.schemas.common import CallbackInfo, InputType, Polygon
 from sectra_client.schemas.image import ImageMetadata
 from sectra_client.schemas.results import ResultResponse
 
+NoneToDict = Annotated[dict[str, Any], BeforeValidator(lambda v: v if v is not None else {})]
+
 
 @unique
 class Action(str, Enum):
-    """Enum of invocation actions"""
-
     CREATE = "create"
     MODIFY = "modify"
     CANCEL = "cancel"
@@ -19,11 +19,9 @@ class Action(str, Enum):
 
 
 class TaggedPolygonContent(BaseModel):
-    """Model for tagged polygon input content."""
-
     polygon: Polygon
-    tags: Optional[List[str]] = None
-    tagIndex: Optional[int] = None
+    tags: list[str] | None = None
+    tagIndex: int | None = None
 
     @model_validator(mode="after")
     def validate_tags(self) -> "TaggedPolygonContent":
@@ -33,60 +31,62 @@ class TaggedPolygonContent(BaseModel):
 
 
 class MultiAreaContent(BaseModel):
-    """Model for multi area input content."""
-
-    polygons: List[Polygon]
+    polygons: list[Polygon]
 
 
-class CreateInput(BaseModel):
-    """Model for create invocation input."""
+class WholeSlideInput(BaseModel):
+    type: Literal[InputType.WHOLE_SLIDE]
 
-    type: InputType
-    content: Optional[Union[TaggedPolygonContent, MultiAreaContent]] = None
 
-    @model_validator(mode="before")
-    @classmethod
-    def validate_content(cls, values) -> dict:
-        if values.get("type") == InputType.WHOLE_SLIDE:
-            values["content"] = None  # strip it before union resolution
-        elif values.get("content") is None:
-            raise ValueError("content must be defined when type is not wholeSlide")
-        return values
+class TaggedPolygonInput(BaseModel):
+    type: Literal[InputType.TAGGED_POLYGON]
+    content: TaggedPolygonContent
+
+
+class MultiAreaInput(BaseModel):
+    type: Literal[InputType.MULTI_AREA]
+    content: MultiAreaContent
+
+
+CreateInput = Annotated[WholeSlideInput | TaggedPolygonInput | MultiAreaInput, Field(discriminator="type")]
 
 
 class InvocationBase(BaseModel):
-    """Base model for both hook launch and image notification."""
+    model_config = ConfigDict(extra="ignore")
 
     applicationId: str
     slideId: str
     callbackInfo: CallbackInfo
-    context: Dict[str, Any] = Field(default_factory=dict)
-    cancellationToken: Optional[str] = None
-
-    @field_validator("context", mode="before")
-    @classmethod
-    def none_to_dict(cls, v):
-        return {} if v is None else v
+    context: NoneToDict = Field(default_factory=dict)
+    cancellationToken: str | None = None
 
 
-class Invocation(InvocationBase):
-    """Model for invocations from DPAT."""
+class CreateInvocation(InvocationBase):
+    action: Literal[Action.CREATE]
+    cancellationToken: str
+    input: CreateInput
 
-    action: Action
-    input: Optional[Union[CreateInput, ResultResponse]] = None
 
-    @model_validator(mode="after")
-    def validate_input(self) -> "Invocation":
-        if self.action != Action.CANCEL and self.input is None:
-            raise ValueError("input must not be None when action is not cancel")
+class ModifyInvocation(InvocationBase):
+    action: Literal[Action.MODIFY]
+    cancellationToken: str
+    input: ResultResponse
 
-        if self.action != Action.DELETE and self.cancellationToken is None:
-            raise ValueError("cancellationToken must be defined when action is not delete")
 
-        return self
+class CancelInvocation(InvocationBase):
+    action: Literal[Action.CANCEL]
+    cancellationToken: str
+
+
+class DeleteInvocation(InvocationBase):
+    action: Literal[Action.DELETE]
+    input: ResultResponse
+
+
+Invocation = Annotated[
+    CreateInvocation | ModifyInvocation | CancelInvocation | DeleteInvocation, Field(discriminator="action")
+]
 
 
 class ImageNotification(InvocationBase):
-    """Model for new image notification from DPAT."""
-
     imageInfo: ImageMetadata

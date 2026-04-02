@@ -8,10 +8,10 @@ class JPEGImage:
 
     image: bytes
 
-    def convert_to_pil(self) -> Image:
+    def convert_to_pil(self) -> Image.Image:
         """Converts the JPEG image bytes to a PIL Image object.
 
         Returns:
-            Image: PIL Image object
+            Image.Image: PIL Image object
         """
         return Image.open(BytesIO(self.image))

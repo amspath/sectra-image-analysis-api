@@ -1,5 +1,5 @@
 from enum import Enum, unique
-from typing import Any, Dict, List, Optional, Union
+from typing import Annotated, Any, Literal, TypeAlias
 
 from pydantic import BaseModel, Field
 
@@ -7,99 +7,82 @@ from sectra_client.schemas.common import Point, Polygon
 
 
 class Style(BaseModel):
-    """Model for style."""
-
-    strokeStyle: Optional[str] = None
-    fillStyle: Optional[str] = None
-    size: Optional[int] = None
+    strokeStyle: str | None = None
+    fillStyle: str | None = None
+    size: int | None = None
 
 
 class Polyline(BaseModel):
-    """Model for polylines."""
-
-    points: List[Point]
+    points: list[Point]
 
 
 class Label(BaseModel):
-    """Model for label."""
-
     location: Point
     label: str
 
 
 class PrimitiveItem(BaseModel):
-    """Model for polygon primitive content item."""
-
-    style: Optional[Style] = None
-    polygons: List[Polygon] = Field(default_factory=list)
-    polylines: List[Polyline] = Field(default_factory=list)
-    labels: List[Label] = Field(default_factory=list)
+    style: Style | None = None
+    polygons: list[Polygon] = Field(default_factory=list)
+    polylines: list[Polyline] = Field(default_factory=list)
+    labels: list[Label] = Field(default_factory=list)
 
 
 class Patch(BaseModel):
-    """Model for patches."""
-
     tag: int
     position: Point
     sortKeyValue: float
 
 
 class Status(BaseModel):
-    """Model for statuses."""
-
-    value: Optional[bool] = True
-    message: Optional[str] = None
+    value: bool | None = True
+    message: str | None = None
 
 
 class PatchContent(BaseModel):
-    """Model for sectra patch content."""
-
     description: str
-    polygons: List[Polygon]
-    patches: List[Patch]
-    tags: List[str]
+    polygons: list[Polygon]
+    patches: list[Patch]
+    tags: list[str]
     patchSize: int
     magnification: float
-    statuses: Dict[str, Status] = {"allowVerify": Status()}
+    statuses: dict[str, Status] = Field(default_factory=lambda: {"allowVerify": Status()})
 
 
 @unique
 class ResultType(str, Enum):
-    """Enum for result types."""
-
     PATCHES = "patchCollection"
     PRIMITIVES = "primitive"
 
 
-class ResultContent(BaseModel):
-    """Schema for results content."""
-
-    type: ResultType
-    content: Union[PatchContent, List[PrimitiveItem]]
+class PrimitiveResultContent(BaseModel):
+    type: Literal[ResultType.PRIMITIVES] = ResultType.PRIMITIVES
+    content: list[PrimitiveItem]
 
 
-DisplayProperties = Dict[str, Union[str, int, float]]
+class PatchResultContent(BaseModel):
+    type: Literal[ResultType.PATCHES] = ResultType.PATCHES
+    content: PatchContent
+
+
+ResultContent = Annotated[PrimitiveResultContent | PatchResultContent, Field(discriminator="type")]
+
+DisplayProperties: TypeAlias = dict[str, str | int | float]
 
 
 class ResultData(BaseModel):
-    """Schema for data field in results."""
-
-    context: Dict[str, Any] = Field(default_factory=dict)
+    context: dict[str, Any] = Field(default_factory=dict)
     result: ResultContent
 
 
 @unique
 class AttachmentState(str, Enum):
-    """Enum for attachment states."""
-
     NEW = "new"
     UPLOAD_IN_PROGRESS = "upload-in-progress"
     STORED = "stored"
 
 
 class Attachment(BaseModel):
-    """Model for result attachments."""
-
     name: str
     state: AttachmentState
 
@@ -108,8 +91,8 @@ class Result(BaseModel):
     slideId: str
     displayResult: str
     applicationVersion: str
-    attachments: List[Attachment] = Field(default_factory=list)
-    data: Union[ResultData, Dict[str, Any]] = Field(default_factory=dict)
+    attachments: list[Attachment] = Field(default_factory=list)
+    data: ResultData = Field(default_factory=ResultData)
     properties: DisplayProperties = Field(default_factory=dict)
 
 
@@ -118,7 +101,5 @@ class AdaptedResult(Result):
 
 
 class ResultResponse(Result):
-    """Schema for result retrieval from DPAT server."""
-
     id: int
     versionId: str
