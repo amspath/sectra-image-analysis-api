@@ -35,16 +35,16 @@ class MultiAreaContent(BaseModel):
 
 
 class WholeSlideInput(BaseModel):
-    type: Literal[InputType.WHOLE_SLIDE]
+    type: Literal[InputType.WHOLE_SLIDE] = InputType.WHOLE_SLIDE
 
 
 class TaggedPolygonInput(BaseModel):
-    type: Literal[InputType.TAGGED_POLYGON]
+    type: Literal[InputType.TAGGED_POLYGON] = InputType.TAGGED_POLYGON
     content: TaggedPolygonContent
 
 
 class MultiAreaInput(BaseModel):
-    type: Literal[InputType.MULTI_AREA]
+    type: Literal[InputType.MULTI_AREA] = InputType.MULTI_AREA
     content: MultiAreaContent
 
 
@@ -62,24 +62,24 @@ class InvocationBase(BaseModel):
 
 
 class CreateInvocation(InvocationBase):
-    action: Literal[Action.CREATE]
+    action: Literal[Action.CREATE] = Action.CREATE
     cancellationToken: str
     input: CreateInput
 
 
 class ModifyInvocation(InvocationBase):
-    action: Literal[Action.MODIFY]
+    action: Literal[Action.MODIFY] = Action.MODIFY
     cancellationToken: str
     input: ResultResponse
 
 
 class CancelInvocation(InvocationBase):
-    action: Literal[Action.CANCEL]
+    action: Literal[Action.CANCEL] = Action.CANCEL
     cancellationToken: str
 
 
 class DeleteInvocation(InvocationBase):
-    action: Literal[Action.DELETE]
+    action: Literal[Action.DELETE] = Action.DELETE
     input: ResultResponse
 
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from sectra_client.client import SectraClient
-from sectra_client.schemas import Point, Polygon, PrimitiveItem, Result, ResultData, Style
+from sectra_client.schemas import Point, Polygon, PrimitiveItem, Result, ResultData, Style, DisplayProperties
 from sectra_client.schemas.invocation import Invocation
 from sectra_client.schemas.results import PrimitiveResultContent
 
@@ -23,6 +23,7 @@ async def sectra_hook(invocation: Invocation, raw_request: Request):
     result_payload = Result(
         slideId=invocation.slideId,
         displayResult="Example Result",
+        displayProperties=DisplayProperties({"Status": "Completed", "Confidence": "95%"}),
         applicationVersion="0.0.1",
         data=ResultData(
             result=PrimitiveResultContent(

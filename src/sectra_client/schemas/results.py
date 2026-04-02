@@ -93,7 +93,7 @@ class Result(BaseModel):
     applicationVersion: str
     attachments: list[Attachment] = Field(default_factory=list)
     data: ResultData = Field(default_factory=ResultData)
-    properties: DisplayProperties = Field(default_factory=dict)
+    displayProperties: DisplayProperties = Field(default_factory=dict)
 
 
 class AdaptedResult(Result):
