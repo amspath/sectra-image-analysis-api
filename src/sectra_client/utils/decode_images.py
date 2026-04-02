@@ -1,5 +1,3 @@
-
-
 from io import BytesIO
 
 from PIL import Image
@@ -7,6 +5,7 @@ from PIL import Image
 
 class JPEGImage:
     """Model for JPEG images."""
+
     image: bytes
 
     def convert_to_pil(self) -> Image:

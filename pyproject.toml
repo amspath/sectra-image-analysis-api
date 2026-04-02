@@ -6,12 +6,12 @@ build-backend = "hatchling.build"
 name = "sectra-image-analysis-api"
 dynamic = ["version"]
 description = "A wrapper for the Sectra Image Analysis API."
-requires-python = "~=3.11"
+requires-python = ">=3.11"
 authors = [{ name = "Robin van Hoorn", email = "r.d.vanhoorn@amsterdamumc.nl" }]
 dependencies = ["hl7", "pydantic", "requests", "requests_toolbelt", "pillow"]
 
 [project.optional-dependencies]
-dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4"]
+dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4", "ty"]
 
 [tool.hatch.metadata]
 allow-direct-references = true

@@ -7,6 +7,4 @@ class SectraRequestError(Exception):
         self.status_code = status_code
         self.text = text
         self.path = path
-        super().__init__(
-            f"Request {path} has failed with status code {status_code}: {text}"
-        )
+        super().__init__(f"Request {path} has failed with status code {status_code}: {text}")

@@ -1,7 +1,7 @@
 from enum import Enum, unique
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, model_validator, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from sectra_client.schemas.common import CallbackInfo, InputType, Polygon
 from sectra_client.schemas.image import ImageMetadata
