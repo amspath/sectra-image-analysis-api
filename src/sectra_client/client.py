@@ -1,7 +1,7 @@
 import logging
 import pathlib
 import re
-from typing import List, Optional, cast
+from typing import List, Optional, Protocol, cast, runtime_checkable
 from urllib.parse import urlsplit, urlunsplit
 
 import requests
@@ -21,6 +21,59 @@ from sectra_client.utils.errors import SectraRequestError
 from sectra_client.utils.helpers import JSONPayload, connection_retry
 
 logger = logging.getLogger(__name__)
+
+
+@runtime_checkable
+class SectraClientProtocol(Protocol):
+    """Structural protocol for SectraClient.
+
+    Type-hint against this in application code so both the real SectraClient
+    and StubSectraClient are accepted without inheritance.
+
+    Example::
+
+        from sectra_client import SectraClientProtocol
+
+        def run_analysis(client: SectraClientProtocol, slide_id: str) -> None:
+            meta = client.get_image_metadata(slide_id)
+            ...
+    """
+
+    version_info: ApplicationInfo
+
+    def __enter__(self) -> "SectraClientProtocol": ...
+    def __exit__(self, *args) -> None: ...
+    def close(self) -> None: ...
+
+    def get_image_infos_in_case(
+        self,
+        accession_number: str,
+        phi: bool = False,
+        accession_number_issuer_id: Optional[str] = None,
+    ) -> list[CaseImageInfo]: ...
+
+    def get_image_infos_in_case_by_slide_id(
+        self,
+        slide_id: str,
+        phi: bool = False,
+        accession_number_issuer_id: Optional[str] = None,
+    ) -> list[CaseImageInfo]: ...
+
+    def get_image_metadata(
+        self, slide_id: str, extended: bool = False, phi: bool = False
+    ) -> ImageMetadata: ...
+
+    def get_label_image(self, slide_id: str) -> LabelImage: ...
+
+    def download_slide_files(
+        self, slide_id: str, output_dir: pathlib.Path | str
+    ) -> list[pathlib.Path]: ...
+
+    def create_results(self, app_id: str, results: Result) -> ResultResponse: ...
+    def get_result_by_result_id(self, app_id: str, result_id: int) -> ResultResponse: ...
+    def get_all_results(self, wsi_id: str, app_id: str) -> list[ResultResponse]: ...
+    def update_results(self, app_id: str, result_id: int, result: AdaptedResult) -> ResultResponse: ...
+    def set_quality_control(self, slide_id: str, quality_control: QualityControl) -> None: ...
 
 
 class SectraClient:
