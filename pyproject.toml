@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "sectra-image-analysis-api"
 dynamic = ["version"]
 description = "A wrapper for the Sectra Image Analysis API."
+readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Robin van Hoorn", email = "r.d.vanhoorn@amsterdamumc.nl" }]
 dependencies = ["hl7", "pydantic", "requests", "requests_toolbelt", "pillow"]
