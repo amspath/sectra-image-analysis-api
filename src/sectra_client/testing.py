@@ -31,6 +31,9 @@ _STUB_JPEG = b"\xff\xd8\xff\xd9"
 class StubSectraClient:
     """Drop-in stub for SectraClient. Returns plausible fake data and logs all calls.
 
+    Keeps an in-memory store of results so that create/get/update are consistent
+    within a session. IDs are auto-incremented per (app_id, slide_id) pair.
+
     Intended for local development and testing without a real Sectra server.
     Satisfies SectraClientProtocol structurally, so it can be used anywhere
     the real SectraClient is accepted.
@@ -46,6 +49,9 @@ class StubSectraClient:
     def __init__(self, url: str = "stub://localhost", token: str = "stub-token") -> None:
         log.info("[SECTRA STUB] init url=%s", url)
         self.version_info = ApplicationInfo(apiVersion="1.10", softwareVersion="stub")
+        # {(app_id, result_id): ResultResponse}
+        self._results: dict[tuple[str, int], ResultResponse] = {}
+        self._next_id: int = 1
 
     def __enter__(self) -> "StubSectraClient":
         return self
@@ -65,14 +71,16 @@ class StubSectraClient:
             block=DisplayedName(displayName="A1"),
         )
 
-    def _stub_response(self, result_id: int, slide_id: str) -> ResultResponse:
+    def _make_response(self, result_id: int, source: Result, version_id: str) -> ResultResponse:
         return ResultResponse(
             id=result_id,
-            versionId=_STUB_VERSION_ID,
-            slideId=slide_id,
-            displayResult="[stub]",
-            applicationVersion=_STUB_APP_VERSION,
-            data=ResultData(result=PrimitiveResultContent(content=[])),
+            versionId=version_id,
+            slideId=source.slideId,
+            displayResult=source.displayResult,
+            applicationVersion=source.applicationVersion,
+            attachments=source.attachments,
+            data=source.data,
+            displayProperties=source.displayProperties,
         )
 
     # -- public API --------------------------------------------------------
@@ -126,20 +134,35 @@ class StubSectraClient:
         return []
 
     def create_results(self, app_id: str, results: Result) -> ResultResponse:
-        log.info("[SECTRA STUB] create_results app_id=%s slideId=%s", app_id, results.slideId)
-        return self._stub_response(result_id=1, slide_id=results.slideId)
+        result_id = self._next_id
+        self._next_id += 1
+        response = self._make_response(result_id, results, version_id=f"stub-version-{result_id}")
+        self._results[(app_id, result_id)] = response
+        log.info(
+            "[SECTRA STUB] create_results app_id=%s slideId=%s -> id=%d",
+            app_id, results.slideId, result_id,
+        )
+        return response
 
     def get_result_by_result_id(self, app_id: str, result_id: int) -> ResultResponse:
         log.info("[SECTRA STUB] get_result_by_result_id app_id=%s result_id=%d", app_id, result_id)
-        return self._stub_response(result_id=result_id, slide_id="stub-slide")
+        return self._results[(app_id, result_id)]
 
     def get_all_results(self, wsi_id: str, app_id: str) -> list[ResultResponse]:
         log.info("[SECTRA STUB] get_all_results wsi_id=%s app_id=%s", wsi_id, app_id)
-        return [self._stub_response(result_id=1, slide_id=wsi_id)]
+        return [
+            r for (aid, _), r in self._results.items()
+            if aid == app_id and r.slideId == wsi_id
+        ]
 
     def update_results(self, app_id: str, result_id: int, result: AdaptedResult) -> ResultResponse:
-        log.info("[SECTRA STUB] update_results app_id=%s result_id=%d", app_id, result_id)
-        return self._stub_response(result_id=result_id, slide_id=result.slideId)
+        response = self._make_response(result_id, result, version_id=result.versionId)
+        self._results[(app_id, result_id)] = response
+        log.info(
+            "[SECTRA STUB] update_results app_id=%s result_id=%d slideId=%s",
+            app_id, result_id, result.slideId,
+        )
+        return response
 
     def set_quality_control(self, slide_id: str, quality_control: QualityControl) -> None:
         log.info(
