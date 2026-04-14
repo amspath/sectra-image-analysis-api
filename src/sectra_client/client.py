@@ -1,3 +1,4 @@
+from types import TracebackType
 import logging
 import pathlib
 import re
@@ -42,7 +43,14 @@ class SectraClientProtocol(Protocol):
     version_info: ApplicationInfo
 
     def __enter__(self) -> "SectraClientProtocol": ...
-    def __exit__(self, *args) -> None: ...
+
+    def __exit__(
+        self, 
+        exc_type: type[BaseException] | None, 
+        exc_val: BaseException | None, 
+        exc_tb: TracebackType | None
+    ) -> None: ...
+    
     def close(self) -> None: ...
 
     def get_image_infos_in_case(

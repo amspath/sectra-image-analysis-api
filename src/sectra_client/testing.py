@@ -1,4 +1,5 @@
 """Stub SectraClient for local development without a real Sectra server."""
+from types import TracebackType
 import logging
 import pathlib
 from typing import Optional
@@ -9,10 +10,8 @@ from sectra_client.schemas import (
     CaseImageInfo,
     DisplayedName,
     ImageMetadata,
-    PrimitiveResultContent,
     QualityControl,
     Result,
-    ResultData,
     ResultResponse,
     Size,
     SlideFormat,
@@ -56,7 +55,7 @@ class StubSectraClient:
     def __enter__(self) -> "StubSectraClient":
         return self
 
-    def __exit__(self, *args) -> None:
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         pass
 
     def close(self) -> None:
