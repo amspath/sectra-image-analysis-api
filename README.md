@@ -5,7 +5,6 @@ This python package aims to facilite the development of AI applications for Sect
 ## Installation
 
 To install sectra_client:
-
 ```
 pip install "sectra-image-analysis-api @ git+https://github.com/amspath/sectra-image-analysis-api.git"
 ```
@@ -65,6 +64,42 @@ image_info = client.get_image_metadata(slide_id, extended=True, phi=False)
 
 # Make sure to close the connection
 client.close()
+```
+
+### Example 4: Local development without a Sectra server
+
+Use `StubSectraClient` as a drop-in replacement during local development. It keeps an in-memory store of results so that create, fetch, and update calls behave consistently within a session.
+
+Type-hint your application code against `SectraClientProtocol` to make the swap seamless:
+
+```python
+from sectra_client import SectraClientProtocol
+from sectra_client.schemas import PrimitiveResultContent, Result, ResultData
+from sectra_client.testing import StubSectraClient
+
+
+def run_analysis(client: SectraClientProtocol, app_id: str, slide_id: str) -> None:
+    meta = client.get_image_metadata(slide_id)
+
+    result = client.create_results(
+        app_id=app_id,
+        results=Result(
+            slideId=slide_id,
+            displayResult="Analysis complete",
+            applicationVersion="1.0.0",
+            data=ResultData(result=PrimitiveResultContent(content=[])),
+        ),
+    )
+    print(f"Created result id={result.id}")
+
+
+# Local dev — no server needed
+with StubSectraClient() as client:
+    run_analysis(client, app_id="my-app", slide_id="slide-123")
+
+# Production — swap only the instantiation
+# with SectraClient(url=callback_url, token=callback_token) as client:
+#     run_analysis(client, app_id="my-app", slide_id="slide-123")
 ```
 
 ### Error handling and retries
