@@ -66,45 +66,20 @@ image_info = client.get_image_metadata(slide_id, extended=True, phi=False)
 client.close()
 ```
 
-### Example 4: Local development without a Sectra server
-
-Use `StubSectraClient` as a drop-in replacement during local development. It keeps an in-memory store of results so that create, fetch, and update calls behave consistently within a session.
-
-Type-hint your application code against `SectraClientProtocol` to make the swap seamless:
+## Local development with the mock server
+`MockSectraServer` simulates a Sectra PACS instance in memory so you can develop and test without a real server.
 
 ```python
-from sectra_client import SectraClientProtocol
-from sectra_client.schemas import PrimitiveResultContent, Result, ResultData
-from sectra_client.testing import StubSectraClient
+from sectra_client.mock_server import MockSectraServer
 
-
-def run_analysis(client: SectraClientProtocol, app_id: str, slide_id: str) -> None:
-    meta = client.get_image_metadata(slide_id)
-
-    result = client.create_results(
-        app_id=app_id,
-        results=Result(
-            slideId=slide_id,
-            displayResult="Analysis complete",
-            applicationVersion="1.0.0",
-            data=ResultData(result=PrimitiveResultContent(content=[])),
-        ),
+server = MockSectraServer(token="dev-token")
+with server.run(port=8001):
+    server.trigger(
+        webhook_url="http://localhost:8000/sectra/hook",
+        application_id="my-app",
+        slide_id="slide-001",
     )
-    print(f"Created result id={result.id}")
-
-
-# Local dev — no server needed
-with StubSectraClient() as client:
-    run_analysis(client, app_id="my-app", slide_id="slide-123")
-
-# Production — swap only the instantiation
-# with SectraClient(url=callback_url, token=callback_token) as client:
-#     run_analysis(client, app_id="my-app", slide_id="slide-123")
+    results = server.get_results(app_id="my-app", slide_id="slide-001")
 ```
 
-### Error handling and retries
-
-Any request to the Sectra server is retried 5 times with exponential delays if there is a connection error. Any other error is not handled by the clients.
-
-Clients raise `SectraRequestError` if the Sectra server returns an error status code (e.g., 400, 404, 500, etc.). The error includes the returned status code, text and the requested path.
-
+See `examples/local_dev.py` for a complete round-trip: both servers started from a single script, a fake invocation fired, and results read back.
