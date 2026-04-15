@@ -22,7 +22,6 @@ from sectra_client.utils.helpers import JSONPayload, connection_retry
 
 logger = logging.getLogger(__name__)
 
-
 class SectraClient:
     __slots__ = ("_url", "_token", "version_info", "_headers", "_session")
 

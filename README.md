@@ -5,7 +5,6 @@ This python package aims to facilite the development of AI applications for Sect
 ## Installation
 
 To install sectra_client:
-
 ```
 pip install "sectra-image-analysis-api @ git+https://github.com/amspath/sectra-image-analysis-api.git"
 ```
@@ -68,7 +67,6 @@ client.close()
 ```
 
 ## Local development with the mock server
-
 `MockSectraServer` simulates a Sectra PACS instance in memory so you can develop and test without a real server.
 
 ```python
