@@ -2,18 +2,17 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from sectra_client.client import SectraClient
-from sectra_client.schemas import Point, Polygon, PrimitiveItem, Result, ResultData, Style, DisplayProperties
+from sectra_client.schemas import DisplayProperties, Point, Polygon, PrimitiveItem, Result, ResultData, Style
 from sectra_client.schemas.invocation import Invocation
 from sectra_client.schemas.results import PrimitiveResultContent
 
 # This is the main ASGI app
 app = FastAPI(title="Root App")
 
-# This is the RAID sub-application
-raid_app = FastAPI(title="RAID API")
+# This is the analysis sub-application
+analysis_app = FastAPI(title="Analysis API")
 
-
-@raid_app.post("/sectra/hook")
+@analysis_app.post("/sectra/hook")
 async def sectra_hook(invocation: Invocation, raw_request: Request):
     # Show complete request
     body = await raw_request.json()
@@ -63,5 +62,5 @@ async def sectra_hook(invocation: Invocation, raw_request: Request):
     return JSONResponse(empty_temp_result.model_dump())
 
 
-# Mount RAID app under /raid
-app.mount("/raid", raid_app)
+# Mount analysis app under /analysis
+app.mount("/analysis", analysis_app)

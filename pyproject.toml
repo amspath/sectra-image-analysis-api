@@ -11,7 +11,7 @@ authors = [{ name = "Robin van Hoorn", email = "r.d.vanhoorn@amsterdamumc.nl" }]
 dependencies = ["hl7", "pydantic", "requests", "requests_toolbelt", "pillow"]
 
 [project.optional-dependencies]
-dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4", "ty", "fastapi[standard]", "ipykernel"]
+dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4", "ty", "ipykernel", "fastapi[standard]"]
 
 [tool.hatch.metadata]
 allow-direct-references = true

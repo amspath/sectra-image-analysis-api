@@ -26,12 +26,12 @@ logger = logging.getLogger(__name__)
 class SectraClient:
     __slots__ = ("_url", "_token", "version_info", "_headers", "_session")
 
-    def __init__(self, url: str, token: str) -> None:
+    def __init__(self, url: str, token: str, _allow_http: bool = False) -> None:
         # Normalize base url
         parts = urlsplit(url.strip())
 
         scheme = parts.scheme
-        if scheme == "http" or scheme == "":
+        if (scheme == "http" and not _allow_http) or scheme == "":
             scheme = "https"
 
         base = urlunsplit((scheme, parts.netloc, parts.path.rstrip("/"), parts.query, parts.fragment))

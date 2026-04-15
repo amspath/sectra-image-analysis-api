@@ -67,9 +67,21 @@ image_info = client.get_image_metadata(slide_id, extended=True, phi=False)
 client.close()
 ```
 
-### Error handling and retries
+## Local development with the mock server
 
-Any request to the Sectra server is retried 5 times with exponential delays if there is a connection error. Any other error is not handled by the clients.
+`MockSectraServer` simulates a Sectra PACS instance in memory so you can develop and test without a real server.
 
-Clients raise `SectraRequestError` if the Sectra server returns an error status code (e.g., 400, 404, 500, etc.). The error includes the returned status code, text and the requested path.
+```python
+from sectra_client.mock_server import MockSectraServer
 
+server = MockSectraServer(token="dev-token")
+with server.run(port=8001):
+    server.trigger(
+        webhook_url="http://localhost:8000/sectra/hook",
+        application_id="my-app",
+        slide_id="slide-001",
+    )
+    results = server.get_results(app_id="my-app", slide_id="slide-001")
+```
+
+See `examples/local_dev.py` for a complete round-trip: both servers started from a single script, a fake invocation fired, and results read back.
