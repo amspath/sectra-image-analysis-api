@@ -28,7 +28,7 @@ from sectra_client.schemas.results import PrimitiveResultContent
 analysis_app = FastAPI(title="Example Analysis App")
 
 # Directory where downloaded WSI files will be written
-DOWNLOAD_DIR = pathlib.Path("/home/p098864/temp/downloads")
+DOWNLOAD_DIR = pathlib.Path("./downloads")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 
@@ -119,7 +119,6 @@ if __name__ == "__main__":
 
     # Point this at a real WSI file on your disk.
     WSI_FILE = pathlib.Path("/path/to/your/slide.tiff")
-    WSI_FILE = pathlib.Path("/home/p098864/temp/R_T14-03112_6.tiff")
 
     # Start the mock Sectra server and register the WSI file for the slide.
     mock = MockSectraServer(
