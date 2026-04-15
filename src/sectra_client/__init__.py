@@ -1,3 +1,3 @@
-from sectra_client.client import SectraClient, SectraClientProtocol
+from sectra_client.client import SectraClient
 
-__all__ = ["SectraClient", "SectraClientProtocol"]
+__all__ = ["SectraClient"]
