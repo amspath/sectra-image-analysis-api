@@ -15,7 +15,7 @@ from fastapi import FastAPI, Header, HTTPException, Response
 from fastapi.responses import JSONResponse, StreamingResponse
 from PIL import Image
 
-from sectra_client.schemas.common import CallbackInfo, DisplayedName, Size
+from sectra_client.schemas.common import DisplayedName, Size
 from sectra_client.schemas.image import (
     CaseImageInfo,
     FocalPlane,
@@ -25,7 +25,7 @@ from sectra_client.schemas.image import (
     TileFormat,
 )
 from sectra_client.schemas.info import ApplicationInfo
-from sectra_client.schemas.invocation import CreateInvocation, WholeSlideInput
+from sectra_client.schemas.invocation import Invocation
 from sectra_client.schemas.quality_control import QualityControl, QualityControlData
 from sectra_client.schemas.results import AdaptedResult, Result, ResultResponse
 
@@ -190,46 +190,24 @@ class MockSectraServer:
     def trigger(
         self,
         webhook_url: str,
-        application_id: str,
-        slide_id: str,
-        cancellation_token: Optional[str] = None,
+        invocation: Invocation,
     ) -> dict:
-        """Fire a ``CreateInvocation`` at *webhook_url*, simulating Sectra.
-
-        Sets ``callbackInfo`` to point back to this mock server so the
-        analysis app can authenticate and store results.  Blocks until the
-        webhook responds.
+        """Fire an invocation at *webhook_url*, simulating Sectra.
 
         Parameters
         ----------
         webhook_url:
             Full URL of the analysis app's invocation endpoint, e.g.
             ``"http://localhost:8000/sectra/hook"``.
-        application_id:
-            Application ID passed in the invocation payload.
-        slide_id:
-            Slide to analyse.  Auto-created with fake metadata if unknown.
-        cancellation_token:
-            Optional token; a UUID is generated if omitted.
-
+        invocation:
+            The invocation to fire.
+        
         Returns
         -------
         dict
             JSON body returned by the webhook.
         """
-        self._get_or_create_slide(slide_id)
-
-        invocation = CreateInvocation(
-            applicationId=application_id,
-            slideId=slide_id,
-            callbackInfo=CallbackInfo(
-                url=f"http://{self._host}:{self._port}",
-                token=self.token,
-            ),
-            cancellationToken=cancellation_token or str(uuid.uuid4()),
-            input=WholeSlideInput(),
-        )
-
+        self._get_or_create_slide(invocation.slideId)  # ensure slide metadata exists for the invocation
         resp = _requests.post(webhook_url, json=invocation.model_dump(), timeout=30)
         resp.raise_for_status()
         return resp.json()
@@ -345,7 +323,7 @@ class MockSectraServer:
         @app.get("/slides/{slide_id}/label")
         def get_slide_label(slide_id: str, authorization: Optional[str] = Header(None)):
             self._verify_token(authorization)
-            return Response(content=        _LABEL_JPEG, media_type="image/jpeg")
+            return Response(content=_LABEL_JPEG, media_type="image/jpeg")
 
         # ---- /slides/{slide_id}/files -------------------------------------
         @app.get("/slides/{slide_id}/files")
