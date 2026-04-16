@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import pathlib
+import socket
 import threading
 import time
 import uuid
@@ -148,6 +149,7 @@ class MockSectraServer:
         self._port: int = 8001
         self._server: Optional[uvicorn.Server] = None
         self._thread: Optional[threading.Thread] = None
+        self._sock: Optional[socket.socket] = None
 
     # ------------------------------------------------------------------
     # In-process state helpers (no HTTP needed)
@@ -257,10 +259,18 @@ class MockSectraServer:
         if self._server is not None:
             raise RuntimeError("Server is already running")
 
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_MAXSEG, 1440)
+        except OSError as e:
+            print(f"[mock] Warning: could not set TCP_MAXSEG: {e}")
+        sock.bind((self._host, self._port))
+        self._sock = sock  # keep reference so GC doesn't close it
+
         config = uvicorn.Config(
             self.create_app(),
-            host=self._host,
-            port=self._port,
+            fd=sock.fileno(),
             log_level="warning",
         )
         self._server = uvicorn.Server(config)
@@ -281,6 +291,9 @@ class MockSectraServer:
             self._thread.join(timeout=5)
         self._server = None
         self._thread = None
+        if self._sock is not None:
+            self._sock.close()
+            self._sock = None
 
     def __enter__(self) -> "MockSectraServer":
         return self
