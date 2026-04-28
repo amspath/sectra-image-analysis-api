@@ -51,6 +51,14 @@ class SectraClient:
         # Make sure to close the session
         self._session.close()
 
+    @property
+    def response_headers(self) -> dict[str, str]:
+        """Returns the headers that should be included in responses to Sectra callbacks."""
+        return {
+            "X-Sectra-ApiVersion": self.version_info.apiVersion,
+            "X-Sectra-SoftwareVersion": self.version_info.softwareVersion,
+        }
+
     @connection_retry()
     def _get(self, path: str, **kwargs) -> JSONPayload:
         url = f"{self._url}{path}"

@@ -49,17 +49,9 @@ async def sectra_hook(invocation: Invocation, raw_request: Request):
 
     # Upload a permanent result to Sectra using the callback URL and token provided in the invocation
     with SectraClient(url=invocation.callbackInfo.url, token=invocation.callbackInfo.token) as client:
-        client.create_results(app_id=invocation.applicationId, results=result_payload)
+        create_result = client.create_results(app_id=invocation.applicationId, results=result_payload)
 
-    # Sectra also expects a response to the hook request. Otherwise it will show an error to the user.
-    empty_temp_result = Result(
-        slideId=invocation.slideId,
-        displayResult="",
-        applicationVersion="0.0.1",
-        data=ResultData(result=PrimitiveResultContent(content=[])),
-    )
-
-    return JSONResponse(empty_temp_result.model_dump())
+        return JSONResponse(create_result.model_dump(), headers=client.response_headers)
 
 
 # Mount analysis app under /analysis

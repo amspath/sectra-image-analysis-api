@@ -104,6 +104,7 @@ def sectra_hook(invocation: Invocation, background_tasks: BackgroundTasks):
 # Entry point: run the full round-trip from a single Python script
 # ---------------------------------------------------------------------------
 
+
 def _wait_for_server(server: uvicorn.Server, timeout: float = 10.0) -> None:
     deadline = time.monotonic() + timeout
     while not server.started:
