@@ -33,6 +33,11 @@ class Patch(BaseModel):
     position: Point
     sortKeyValue: float
 
+class Action(BaseModel):
+    id: str
+    state: int
+    name: str
+    tooltip: str
 
 class Status(BaseModel):
     value: bool | None = True
@@ -43,6 +48,7 @@ class PatchContent(BaseModel):
     description: str
     polygons: list[Polygon]
     patches: list[Patch]
+    actions: list[Action]
     tags: list[str]
     patchSize: int
     magnification: float

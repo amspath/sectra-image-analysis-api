@@ -22,7 +22,7 @@ new_result = AdaptedResult(
     applicationVersion="0.0.1",
     versionId="2",
     data=result.data,
-    displayProperties=DisplayProperties({"Status": "Failed", "Confidence": "0%"})
+    displayProperties=DisplayProperties({"Status": "Failed", "Confidence": "0%"}),
 )
 
 assert isinstance(new_result.data.result, PrimitiveResultContent)
