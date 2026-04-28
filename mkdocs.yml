@@ -1,0 +1,30 @@
+site_name: Sectra Image Analysis API
+site_url: https://amspath.github.io/sectra-image-analysis-api
+repo_url: https://github.com/amspath/sectra-image-analysis-api
+repo_name: amspath/sectra-image-analysis-api
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+
+nav:
+  - Home: index.md
+  - Quick Start: quickstart.md
+  - API Reference:
+    - SectraClient: api/client.md
+    - MockSectraServer: api/mock-server.md
+    - Schemas: api/schemas.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - admonition
+  - tables

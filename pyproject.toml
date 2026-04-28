@@ -7,12 +7,36 @@ name = "sectra-image-analysis-api"
 dynamic = ["version"]
 description = "A wrapper for the Sectra Image Analysis API."
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.11"
 authors = [{ name = "Robin van Hoorn", email = "r.d.vanhoorn@amsterdamumc.nl" }]
-dependencies = ["hl7", "pydantic", "requests", "requests_toolbelt", "pillow"]
+keywords = ["digital pathology", "whole slide image", "WSI", "medical imaging"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "hl7>=0.4.5", 
+    "pydantic>=2.0.0", 
+    "requests>=2.28.0", 
+    "requests_toolbelt>=1.0.0", 
+    "pillow>=10.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/amspath/sectra-image-analysis-api"
+Repository = "https://github.com/amspath/sectra-image-analysis-api"
 
 [project.optional-dependencies]
-dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4", "ty", "ipykernel", "fastapi[standard]"]
+dev = ["honcho>=2.0.0", "ruff>=0.12.5", "types-requests>=2.32.4", "ty>=0.0.10", "fastapi[standard]>=0.115.0"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
