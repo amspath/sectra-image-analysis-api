@@ -2,11 +2,14 @@
 
 This python package aims to facilite the development of AI applications for Sectra PACS.
 
+## Version
+The library currently supports functionality up to do version 3.4 (Dec 2023). However, we will update to 5.0 in Juli, after which this library will be adjusted to the newest version as well. 
+
 ## Installation
 
 To install sectra_client:
 ```
-pip install "sectra-image-analysis-api @ git+https://github.com/amspath/sectra-image-analysis-api.git"
+pip install sectra-image-analysis-api
 ```
 
 ## Usage
@@ -19,7 +22,7 @@ Before using the client, make sure you have access to a valid authentication tok
 from sectra_client import SectraClient
 
 # Info, sent by Sectra in the request
-callback_url = "http://sectraweb.acc1.umcinfra.nl/SectraPathologyServer/external/imageanalysis/v1"
+callback_url = "http://sectraweb.*.*.*/SectraPathologyServer/external/imageanalysis/v1"
 callback_token = "abcde"
 slide_id = "fghij"
 
