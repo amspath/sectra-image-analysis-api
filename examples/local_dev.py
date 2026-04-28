@@ -10,6 +10,8 @@ from fastapi.responses import JSONResponse
 from sectra_client.client import SectraClient
 from sectra_client.mock_server import MockSectraServer
 from sectra_client.schemas import (
+    CallbackInfo,
+    CreateInvocation,
     DisplayProperties,
     Point,
     Polygon,
@@ -17,6 +19,7 @@ from sectra_client.schemas import (
     Result,
     ResultData,
     Style,
+    WholeSlideInput,
 )
 from sectra_client.schemas.invocation import Invocation
 from sectra_client.schemas.results import PrimitiveResultContent
@@ -142,8 +145,16 @@ if __name__ == "__main__":
         print(f"Triggering invocation for {SLIDE_ID} ...")
         response = mock.trigger(
             webhook_url=f"http://localhost:{APP_PORT}/sectra/hook",
-            application_id="my-app",
-            slide_id=SLIDE_ID,
+            invocation=CreateInvocation(
+                applicationId="my-app",
+                slideId=SLIDE_ID,
+                callbackInfo=CallbackInfo(
+                    url=f"http://localhost:{MOCK_PORT}",
+                    token="dev-token",
+                ),
+                cancellationToken="token-001",
+                input=WholeSlideInput(),
+            ),
         )
         print(f"Webhook response    : {response}")
 
