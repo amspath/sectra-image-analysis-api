@@ -2,7 +2,7 @@
 
 Sectra sends a ``newImageFiles`` notification when new image files are imported. It
 carries the slide's full (PHI-free) ``imageInfo``, so the triage decision needs no API
-calls -- and ignoring the notification is a valid response.
+calls; and ignoring the notification is a valid response.
 
 Run it directly; it starts a mock Sectra server and an analysis app and fires two
 notifications, one that gets accepted and one that gets skipped::
@@ -10,6 +10,7 @@ notifications, one that gets accepted and one that gets skipped::
     python examples/image_notification.py
 """
 
+import socket
 import threading
 import time
 
@@ -39,7 +40,7 @@ def sectra_hook(invocation: Invocation):
     """Receive an invocation from Sectra.
 
     Notifications share this endpoint with create/modify/cancel/delete, so handle them
-    explicitly -- an unhandled branch here means notifications are silently dropped.
+    explicitly; an unhandled branch here means notifications are silently dropped.
     """
     if not isinstance(invocation, NewImageFilesInvocation):
         # See local_dev.py for a full create -> download -> store round-trip.
@@ -94,8 +95,10 @@ def _slide(slide_id: str, microns_per_pixel: float, staining: str) -> ImageMetad
 
 
 if __name__ == "__main__":
-    MOCK_PORT = 8001
-    APP_PORT = 8000
+    # Port 0 lets the OS pick a free port. 
+    app_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    app_sock.bind(("localhost", 0))
+    APP_PORT = app_sock.getsockname()[1]
     WEBHOOK = f"http://localhost:{APP_PORT}/sectra/hook"
 
     # Two slides: one we want, one we don't.
@@ -107,13 +110,13 @@ if __name__ == "__main__":
         },
     )
 
-    with mock.run(port=MOCK_PORT):
-        app_config = uvicorn.Config(analysis_app, host="localhost", port=APP_PORT, log_level="warning")
+    with mock.run(port=0):
+        app_config = uvicorn.Config(analysis_app, fd=app_sock.fileno(), log_level="warning")
         app_server = uvicorn.Server(app_config)
         threading.Thread(target=app_server.run, daemon=True).start()
         _wait_for_server(app_server)
 
-        print(f"Mock Sectra server  : http://localhost:{MOCK_PORT}")
+        print(f"Mock Sectra server  : {mock.url}")
         print(f"Analysis app        : http://localhost:{APP_PORT}\n")
 
         # notify() builds the payload from the mock's own slide metadata, so the

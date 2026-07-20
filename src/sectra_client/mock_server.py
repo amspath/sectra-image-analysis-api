@@ -151,6 +151,20 @@ class MockSectraServer:
         self._thread: Optional[threading.Thread] = None
         self._sock: Optional[socket.socket] = None
 
+    @property
+    def port(self) -> int:
+        """Port the server is bound to.
+
+        Only meaningful once :meth:`start` has run. When started with ``port=0`` this
+        is the port the OS actually assigned, not ``0``.
+        """
+        return self._port
+
+    @property
+    def url(self) -> str:
+        """Base URL of this server, e.g. ``"http://localhost:8001"``."""
+        return f"http://{self._host}:{self._port}"
+
     # ------------------------------------------------------------------
     # In-process state helpers (no HTTP needed)
     # ------------------------------------------------------------------
@@ -242,7 +256,7 @@ class MockSectraServer:
         invocation = NewImageFilesInvocation(
             applicationId=application_id,
             slideId=slide_id,
-            callbackInfo=CallbackInfo(url=f"http://{self._host}:{self._port}", token=self.token),
+            callbackInfo=CallbackInfo(url=self.url, token=self.token),
             cancellationToken=str(uuid.uuid4()),
             imageInfo=self._get_or_create_slide(slide_id),
         )
@@ -282,6 +296,7 @@ class MockSectraServer:
         except OSError as e:
             print(f"[mock] Warning: could not set TCP_MAXSEG: {e}")
         sock.bind((self._host, self._port))
+        self._port = sock.getsockname()[1]
         self._sock = sock  # keep reference so GC doesn't close it
 
         config = uvicorn.Config(

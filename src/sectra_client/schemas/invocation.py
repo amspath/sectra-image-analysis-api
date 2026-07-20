@@ -85,16 +85,8 @@ class DeleteInvocation(InvocationBase):
 
 
 class NewImageFilesInvocation(InvocationBase):
-    """Sent when new image files were imported, so the app can decide whether to analyse.
-
-    Ignoring the call is a valid response -- no result needs to be stored.
-    """
-
     action: Literal[Action.NEW_IMAGE_FILES] = Action.NEW_IMAGE_FILES
     cancellationToken: str
-    # ponytail: Sectra always sends {"type": "wholeSlide"} here, purely for symmetry with
-    # the create action. Kept (rather than dropped via extra="ignore") so model_dump()
-    # stays wire-faithful, since MockSectraServer serialises invocations that way.
     input: CreateInput = WholeSlideInput()
     imageInfo: ImageMetadata
 
