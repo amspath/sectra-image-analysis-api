@@ -76,18 +76,9 @@ Another discriminated union on `type`:
 
 ### Image notifications
 
-`NewImageFilesInvocation` (`action: "newImageFiles"`) is sent when new image files are
-imported for a slide, so your app can decide whether the slide is worth analysing. Unlike
-the other four actions it carries the slide's full `imageInfo` (PHI-free) up front, so the
-decision needs no API calls. **Ignoring the call is a valid response** — no result has to be
-stored.
+`NewImageFilesInvocation` (`action: "newImageFiles"`) is sent when new image files are imported for a slide, so your app can decide whether the slide is worth analysing. Unlike the other four actions it carries the slide's full `imageInfo` (PHI-free) up front, so the decision needs no API calls.
 
-Sectra delivers it to whatever URL you registered, so it normally arrives on the same
-webhook as everything else.
-
-!!! warning "Handle it explicitly"
-    A `match` statement without a `case _:` wildcard will *silently* do nothing when a
-    notification arrives. Add a case for `NewImageFilesInvocation` even if it just returns.
+Sectra delivers it to whatever URL you registered, so it normally arrives on the same webhook as everything else.
 
 ```python
 @app.post("/sectra/hook")
@@ -98,13 +89,13 @@ def hook(invocation: Invocation):
         ...                    # otherwise queue the analysis
 ```
 
-To simulate one in local development, use
-[`MockSectraServer.notify()`](mock-server.md): it builds the payload from the mock's own
-slide metadata, so the notification always agrees with what the mock later serves.
+To simulate one in local development, use [`MockSectraServer.notify()`](mock-server.md): it builds the payload from the mock's own slide metadata, so the notification always agrees with what the mock later serves.
 
 ```python
 mock.notify(webhook_url="http://localhost:8000/sectra/hook", slide_id="slide-001")
 ```
+
+See `examples/image_notification.py` for a runnable end-to-end triage example.
 
 ---
 

@@ -13,7 +13,6 @@ from sectra_client.schemas import (
     CallbackInfo,
     CreateInvocation,
     DisplayProperties,
-    NewImageFilesInvocation,
     Point,
     Polygon,
     PrimitiveItem,
@@ -92,17 +91,6 @@ def sectra_hook(invocation: Invocation, background_tasks: BackgroundTasks):
     Returns a temporary empty result immediately so the caller is not blocked
     while the (potentially slow) analysis runs in the background.
     """
-    # An image notification just says "new files arrived" — decide here whether the
-    # slide is worth analysing at all. Ignoring it is a valid response.
-    if isinstance(invocation, NewImageFilesInvocation):
-        info = invocation.imageInfo
-        print(
-            f"[analysis app] Notified about {invocation.slideId}: "
-            f"{info.imageSize.width}x{info.imageSize.height} @ {info.micronsPerPixel} um/px "
-            f"— skipping."
-        )
-        return JSONResponse({})
-
     background_tasks.add_task(_run_analysis, invocation)
 
     # Return a temporary empty result — Sectra shows this while processing.
@@ -151,15 +139,6 @@ if __name__ == "__main__":
 
         print(f"Mock Sectra server  : http://localhost:{MOCK_PORT}")
         print(f"Analysis app        : http://localhost:{APP_PORT}")
-        print()
-
-        # Notify the app that new image files arrived. The app inspects the metadata
-        # and decides not to analyse, so nothing is stored.
-        print(f"Notifying about new image files for {SLIDE_ID} ...")
-        print(
-            "Notification response: "
-            f"{mock.notify(webhook_url=f'http://localhost:{APP_PORT}/sectra/hook', slide_id=SLIDE_ID)}"
-        )
         print()
 
         # Trigger a fake CreateInvocation: mock Sectra → analysis app
