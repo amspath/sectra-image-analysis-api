@@ -20,10 +20,6 @@ from fastapi import FastAPI
 from sectra_client.mock_server import MockSectraServer
 from sectra_client.schemas import ImageMetadata, Invocation, NewImageFilesInvocation
 
-# ---------------------------------------------------------------------------
-# Image analysis webhook app — replace this with your own logic
-# ---------------------------------------------------------------------------
-
 analysis_app = FastAPI(title="Example Notification Triage App")
 
 # Slides coarser than this aren't worth our time.
@@ -61,11 +57,6 @@ def sectra_hook(invocation: Invocation):
     # Fetch pixel data / files with SectraClient(invocation.callbackInfo.url, ...) and
     # store results, exactly as in local_dev.py.
     return {}
-
-
-# ---------------------------------------------------------------------------
-# Entry point
-# ---------------------------------------------------------------------------
 
 
 def _wait_for_server(server: uvicorn.Server, timeout: float = 10.0) -> None:
