@@ -5,7 +5,7 @@ carries the slide's full (PHI-free) ``imageInfo``, so the triage decision needs 
 calls; and ignoring the notification is a valid response.
 
 Run it directly; it starts a mock Sectra server and an analysis app and fires two
-notifications, one that gets accepted and one that gets skipped::
+notifications, one that gets accepted and one that gets skipped.
 
     python examples/image_notification.py
 """
