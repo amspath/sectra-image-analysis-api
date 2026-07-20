@@ -16,6 +16,7 @@ class Action(str, Enum):
     MODIFY = "modify"
     CANCEL = "cancel"
     DELETE = "delete"
+    NEW_IMAGE_FILES = "newImageFiles"
 
 
 class TaggedPolygonContent(BaseModel):
@@ -83,10 +84,22 @@ class DeleteInvocation(InvocationBase):
     input: ResultResponse
 
 
-Invocation = Annotated[
-    CreateInvocation | ModifyInvocation | CancelInvocation | DeleteInvocation, Field(discriminator="action")
-]
+class NewImageFilesInvocation(InvocationBase):
+    """Sent when new image files were imported, so the app can decide whether to analyse.
 
+    Ignoring the call is a valid response -- no result needs to be stored.
+    """
 
-class ImageNotification(InvocationBase):
+    action: Literal[Action.NEW_IMAGE_FILES] = Action.NEW_IMAGE_FILES
+    cancellationToken: str
+    # ponytail: Sectra always sends {"type": "wholeSlide"} here, purely for symmetry with
+    # the create action. Kept (rather than dropped via extra="ignore") so model_dump()
+    # stays wire-faithful, since MockSectraServer serialises invocations that way.
+    input: CreateInput = WholeSlideInput()
     imageInfo: ImageMetadata
+
+
+Invocation = Annotated[
+    CreateInvocation | ModifyInvocation | CancelInvocation | DeleteInvocation | NewImageFilesInvocation,
+    Field(discriminator="action"),
+]
