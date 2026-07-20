@@ -47,10 +47,11 @@ from sectra_client.schemas.invocation import Invocation
 @app.post("/sectra/hook")
 def hook(invocation: Invocation):
     match invocation:
-        case CreateInvocation():   ...
-        case ModifyInvocation():   ...
-        case CancelInvocation():   ...
-        case DeleteInvocation():   ...
+        case CreateInvocation():          ...
+        case ModifyInvocation():          ...
+        case CancelInvocation():          ...
+        case DeleteInvocation():          ...
+        case NewImageFilesInvocation():   ...
 ```
 
 | Type | `action` | Key extra fields |
@@ -58,19 +59,43 @@ def hook(invocation: Invocation):
 | `CreateInvocation` | `CREATE` | `input: CreateInput` |
 | `ModifyInvocation` | `MODIFY` | `input: ResultResponse` (existing result to update) |
 | `CancelInvocation` | `CANCEL` | — |
-| `DeleteInvocation` | `DELETE` | — |
+| `DeleteInvocation` | `DELETE` | `input: ResultResponse` (result to delete) |
+| `NewImageFilesInvocation` | `NEW_IMAGE_FILES` | `imageInfo: ImageMetadata` |
 
 All invocations share: `applicationId`, `slideId`, `callbackInfo`.
 
 ### `CreateInput`
 
-Another discriminated union on `inputType`:
+Another discriminated union on `type`:
 
-| Type | `inputType` | Extra fields |
+| Type | `type` | Extra fields |
 |---|---|---|
 | `WholeSlideInput` | `WHOLE_SLIDE` | — |
-| `TaggedPolygonInput` | `TAGGED_POLYGON` | `polygons`, `tag` |
-| `MultiAreaInput` | `MULTI_AREA` | `areas` |
+| `TaggedPolygonInput` | `TAGGED_POLYGON` | `content: TaggedPolygonContent` |
+| `MultiAreaInput` | `MULTI_AREA` | `content: MultiAreaContent` |
+
+### Image notifications
+
+`NewImageFilesInvocation` (`action: "newImageFiles"`) is sent when new image files are imported for a slide, so your app can decide whether the slide is worth analysing. Unlike the other four actions it carries the slide's full `imageInfo` (PHI-free) up front, so the decision needs no API calls.
+
+Sectra delivers it to whatever URL you registered, so it normally arrives on the same webhook as everything else.
+
+```python
+@app.post("/sectra/hook")
+def hook(invocation: Invocation):
+    if isinstance(invocation, NewImageFilesInvocation):
+        if invocation.imageInfo.micronsPerPixel > 0.5:
+            return {}          # too low-res for us — ignore
+        ...                    # otherwise queue the analysis
+```
+
+To simulate one in local development, use [`MockSectraServer.notify()`](mock-server.md): it builds the payload from the mock's own slide metadata, so the notification always agrees with what the mock later serves.
+
+```python
+mock.notify(webhook_url="http://localhost:8000/sectra/hook", slide_id="slide-001")
+```
+
+See `examples/image_notification.py` for a runnable end-to-end triage example.
 
 ---
 

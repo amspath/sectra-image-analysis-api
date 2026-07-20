@@ -15,7 +15,7 @@ from fastapi import FastAPI, Header, HTTPException, Response
 from fastapi.responses import JSONResponse, StreamingResponse
 from PIL import Image
 
-from sectra_client.schemas.common import DisplayedName, Size
+from sectra_client.schemas.common import CallbackInfo, DisplayedName, Size
 from sectra_client.schemas.image import (
     CaseImageInfo,
     FocalPlane,
@@ -25,7 +25,7 @@ from sectra_client.schemas.image import (
     TileFormat,
 )
 from sectra_client.schemas.info import ApplicationInfo
-from sectra_client.schemas.invocation import Invocation
+from sectra_client.schemas.invocation import Invocation, NewImageFilesInvocation
 from sectra_client.schemas.quality_control import QualityControl, QualityControlData
 from sectra_client.schemas.results import AdaptedResult, Result, ResultResponse
 
@@ -151,6 +151,20 @@ class MockSectraServer:
         self._thread: Optional[threading.Thread] = None
         self._sock: Optional[socket.socket] = None
 
+    @property
+    def port(self) -> int:
+        """Port the server is bound to.
+
+        Only meaningful once :meth:`start` has run. When started with ``port=0`` this
+        is the port the OS actually assigned, not ``0``.
+        """
+        return self._port
+
+    @property
+    def url(self) -> str:
+        """Base URL of this server, e.g. ``"http://localhost:8001"``."""
+        return f"http://{self._host}:{self._port}"
+
     # ------------------------------------------------------------------
     # In-process state helpers (no HTTP needed)
     # ------------------------------------------------------------------
@@ -212,6 +226,44 @@ class MockSectraServer:
         resp.raise_for_status()
         return resp.json()
 
+    def notify(
+        self,
+        webhook_url: str,
+        slide_id: str,
+        application_id: str = "my-app",
+    ) -> dict:
+        """Fire a ``newImageFiles`` image notification at *webhook_url*.
+
+        ``imageInfo`` is taken from this server's own slide metadata (registered via
+        :meth:`add_slide`, or fabricated on demand), so the notification always agrees
+        with what ``GET /slides/{slide_id}/info`` will subsequently return.
+
+        Parameters
+        ----------
+        webhook_url:
+            Full URL of the analysis app's endpoint, e.g.
+            ``"http://localhost:8000/sectra/hook"``.
+        slide_id:
+            Slide that new image files were imported for.
+        application_id:
+            Application the notification is addressed to.
+
+        Returns
+        -------
+        dict
+            JSON body returned by the webhook.
+        """
+        invocation = NewImageFilesInvocation(
+            applicationId=application_id,
+            slideId=slide_id,
+            callbackInfo=CallbackInfo(url=self.url, token=self.token),
+            cancellationToken=str(uuid.uuid4()),
+            imageInfo=self._get_or_create_slide(slide_id),
+        )
+        resp = _requests.post(webhook_url, json=invocation.model_dump(), timeout=30)
+        resp.raise_for_status()
+        return resp.json()
+
     # ------------------------------------------------------------------
     # Server lifecycle
     # ------------------------------------------------------------------
@@ -244,6 +296,7 @@ class MockSectraServer:
         except OSError as e:
             print(f"[mock] Warning: could not set TCP_MAXSEG: {e}")
         sock.bind((self._host, self._port))
+        self._port = sock.getsockname()[1]
         self._sock = sock  # keep reference so GC doesn't close it
 
         config = uvicorn.Config(

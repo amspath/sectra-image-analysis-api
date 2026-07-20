@@ -16,6 +16,7 @@ class Action(str, Enum):
     MODIFY = "modify"
     CANCEL = "cancel"
     DELETE = "delete"
+    NEW_IMAGE_FILES = "newImageFiles"
 
 
 class TaggedPolygonContent(BaseModel):
@@ -83,10 +84,14 @@ class DeleteInvocation(InvocationBase):
     input: ResultResponse
 
 
-Invocation = Annotated[
-    CreateInvocation | ModifyInvocation | CancelInvocation | DeleteInvocation, Field(discriminator="action")
-]
-
-
-class ImageNotification(InvocationBase):
+class NewImageFilesInvocation(InvocationBase):
+    action: Literal[Action.NEW_IMAGE_FILES] = Action.NEW_IMAGE_FILES
+    cancellationToken: str
+    input: CreateInput = WholeSlideInput()
     imageInfo: ImageMetadata
+
+
+Invocation = Annotated[
+    CreateInvocation | ModifyInvocation | CancelInvocation | DeleteInvocation | NewImageFilesInvocation,
+    Field(discriminator="action"),
+]
