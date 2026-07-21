@@ -1,6 +1,7 @@
 import logging
 import pathlib
 import re
+import time
 from typing import List, Optional, cast
 from urllib.parse import urlsplit, urlunsplit
 
@@ -21,6 +22,11 @@ from sectra_client.utils.errors import SectraRequestError
 from sectra_client.utils.helpers import JSONPayload, connection_retry
 
 logger = logging.getLogger(__name__)
+
+# Server versions change only when Sectra is upgraded, so one lookup per server per hour
+# is plenty. Without this every client construction costs a /info round trip.
+_INFO_TTL_SECONDS = 3600
+_info_cache: dict[str, tuple[float, ApplicationInfo]] = {}
 
 class SectraClient:
     __slots__ = ("_url", "_token", "version_info", "_headers", "_session")
@@ -96,9 +102,19 @@ class SectraClient:
         return None
 
     def _retrieve_version_info(self) -> ApplicationInfo:
-        """Retrieves the versions of DPAT from the server."""
+        """Retrieves the versions of DPAT from the server.
 
-        versions = ApplicationInfo(**cast(dict, self._get("/info")))
+        Cached per base url for `_INFO_TTL_SECONDS`, so constructing many clients against
+        the same server costs one /info call per hour rather than one per client.
+        """
+
+        cached = _info_cache.get(self._url)
+        if cached is not None and time.monotonic() - cached[0] < _INFO_TTL_SECONDS:
+            versions = cached[1]
+        else:
+            versions = ApplicationInfo(**cast(dict, self._get("/info")))
+            _info_cache[self._url] = (time.monotonic(), versions)
+
         self._headers.update(
             {"X-Sectra-ApiVersion": versions.apiVersion, "X-Sectra-SoftwareVersion": versions.softwareVersion}
         )
