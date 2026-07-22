@@ -234,6 +234,9 @@ class MockSectraServer:
     ) -> dict:
         """Fire a ``newImageFiles`` image notification at *webhook_url*.
 
+        Sectra does not deliver image notifications to the registered URL itself; it
+        appends ``/imagenotification`` to it. So does this method.
+
         ``imageInfo`` is taken from this server's own slide metadata (registered via
         :meth:`add_slide`, or fabricated on demand), so the notification always agrees
         with what ``GET /slides/{slide_id}/info`` will subsequently return.
@@ -241,8 +244,8 @@ class MockSectraServer:
         Parameters
         ----------
         webhook_url:
-            Full URL of the analysis app's endpoint, e.g.
-            ``"http://localhost:8000/sectra/hook"``.
+            The app's *registered* URL, e.g. ``"http://localhost:8000/sectra/hook"``.
+            The notification is POSTed to ``<webhook_url>/imagenotification``.
         slide_id:
             Slide that new image files were imported for.
         application_id:
@@ -260,7 +263,8 @@ class MockSectraServer:
             cancellationToken=str(uuid.uuid4()),
             imageInfo=self._get_or_create_slide(slide_id),
         )
-        resp = _requests.post(webhook_url, json=invocation.model_dump(), timeout=30)
+        url = f"{webhook_url.rstrip('/')}/imagenotification"
+        resp = _requests.post(url, json=invocation.model_dump(), timeout=30)
         resp.raise_for_status()
         return resp.json()
 

@@ -71,6 +71,7 @@ from sectra_client import SectraClient
 from sectra_client.schemas import Result, ResultData, Invocation, PrimitiveResultContent, CreateInvocation
 
 app = FastAPI()
+
 @app.post("/sectra/hook")
 def hook(invocation: Invocation, background_tasks: BackgroundTasks):
     background_tasks.add_task(run_analysis, invocation)

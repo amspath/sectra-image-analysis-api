@@ -4,6 +4,10 @@ Sectra sends a ``newImageFiles`` notification when new image files are imported.
 carries the slide's full (PHI-free) ``imageInfo``, so the triage decision needs no API
 calls; and ignoring the notification is a valid response.
 
+Image notifications do NOT arrive on the URL you registered. Sectra appends
+``/imagenotification`` to it, so an app registered at ``/sectra/hook`` needs a second
+route at ``/sectra/hook/imagenotification``.
+
 Run it directly; it starts a mock Sectra server and an analysis app and fires two
 notifications, one that gets accepted and one that gets skipped.
 
@@ -33,15 +37,14 @@ def _is_interesting(info: ImageMetadata) -> bool:
 
 @analysis_app.post("/sectra/hook")
 def sectra_hook(invocation: Invocation):
-    """Receive an invocation from Sectra.
+    """The registered URL: create / modify / cancel / delete land here."""
+    # See local_dev.py for a full create -> download -> store round-trip.
+    return {}
 
-    Notifications share this endpoint with create/modify/cancel/delete, so handle them
-    explicitly; an unhandled branch here means notifications are silently dropped.
-    """
-    if not isinstance(invocation, NewImageFilesInvocation):
-        # See local_dev.py for a full create -> download -> store round-trip.
-        return {}
 
+@analysis_app.post("/sectra/hook/imagenotification")
+def sectra_image_notification(invocation: NewImageFilesInvocation):
+    """The registered URL + /imagenotification: newImageFiles lands here."""
     info = invocation.imageInfo
     print(
         f"[analysis app] {invocation.slideId}: "
@@ -90,6 +93,7 @@ if __name__ == "__main__":
     app_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     app_sock.bind(("localhost", 0))
     APP_PORT = app_sock.getsockname()[1]
+    # The registered URL. notify() appends /imagenotification, as Sectra does.
     WEBHOOK = f"http://localhost:{APP_PORT}/sectra/hook"
 
     # Two slides: one we want, one we don't.
