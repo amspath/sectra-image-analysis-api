@@ -235,8 +235,7 @@ class MockSectraServer:
         """Fire a ``newImageFiles`` image notification at *webhook_url*.
 
         Sectra does not deliver image notifications to the registered URL itself; it
-        appends ``/imagenotification`` to it. So does this method — pass the same
-        registered URL you pass to :meth:`trigger`.
+        appends ``/imagenotification`` to it. So does this method.
 
         ``imageInfo`` is taken from this server's own slide metadata (registered via
         :meth:`add_slide`, or fabricated on demand), so the notification always agrees

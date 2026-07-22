@@ -76,16 +76,16 @@ Another discriminated union on `type`:
 
 ### Image notifications
 
-`NewImageFilesInvocation` (`action: "newImageFiles"`) is sent when new image files are imported for a slide, so your app can decide whether the slide is worth analysing. Unlike the other four actions it carries the slide's full `imageInfo` (PHI-free) up front, so the decision needs no API calls.
+`NewImageFilesInvocation` (`action: "newImageFiles"`) is sent when new image files are imported for a slide, so your app can decide whether the slide is worth analysing. Unlike the other four actions it carries the slide's full `imageInfo` (PHI-free) up front.
 
-It does **not** arrive on the URL you registered. Sectra appends `/imagenotification` to it:
+It does not arrive on the URL you registered, as Sectra appends `/imagenotification` to it:
 
 | Action | Delivered to |
 |---|---|
 | `create` / `modify` / `cancel` / `delete` | the registered URL, e.g. `/sectra/hook` |
 | `newImageFiles` | `<registered URL>/imagenotification` |
 
-So an app needs a second route. Without it, notifications 404 silently.
+So an app needs a second route.
 
 ```python
 @app.post("/sectra/hook")

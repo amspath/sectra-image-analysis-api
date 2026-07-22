@@ -6,7 +6,7 @@ calls; and ignoring the notification is a valid response.
 
 Image notifications do NOT arrive on the URL you registered. Sectra appends
 ``/imagenotification`` to it, so an app registered at ``/sectra/hook`` needs a second
-route at ``/sectra/hook/imagenotification`` — without it, notifications 404 silently.
+route at ``/sectra/hook/imagenotification``.
 
 Run it directly; it starts a mock Sectra server and an analysis app and fires two
 notifications, one that gets accepted and one that gets skipped.
