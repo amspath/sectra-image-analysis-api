@@ -1,0 +1,1342 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://amspath.github.io/sectra-image-analysis-api/api/schemas/">
+      
+      
+        <link rel="prev" href="../mock-server/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Schemas - Sectra Image Analysis API</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#schemas" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Sectra Image Analysis API" class="md-header__button md-logo" aria-label="Sectra Image Analysis API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Sectra Image Analysis API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Schemas
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/amspath/sectra-image-analysis-api" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amspath/sectra-image-analysis-api
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../client/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Sectra Image Analysis API" class="md-nav__button md-logo" aria-label="Sectra Image Analysis API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Sectra Image Analysis API
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/amspath/sectra-image-analysis-api" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amspath/sectra-image-analysis-api
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SectraClient
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mock-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MockSectraServer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imagemetadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ImageMetadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caseimageinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CaseImageInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#labelimage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LabelImage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#createinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CreateInput
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#image-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-a-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primitiveresultcontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PrimitiveResultContent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patchresultcontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PatchResultContent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resultresponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResultResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adaptedresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AdaptedResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality control
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imagemetadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ImageMetadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caseimageinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CaseImageInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#labelimage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LabelImage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#createinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CreateInput
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#image-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-a-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primitiveresultcontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PrimitiveResultContent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patchresultcontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PatchResultContent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resultresponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResultResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adaptedresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AdaptedResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality control
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="schemas">Schemas</h1>
+<p>All models are Pydantic <code>BaseModel</code> subclasses. Import from <code>sectra_client.schemas</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sectra_client.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="o">...</span>
+</code></pre></div>
+<hr />
+<h2 id="common">Common</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Fields</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Point</code></td>
+<td><code>x: float</code>, <code>y: float</code></td>
+<td>Normalized coordinates (0–1)</td>
+</tr>
+<tr>
+<td><code>Polygon</code></td>
+<td><code>points: list[Point]</code></td>
+<td>Closed shape</td>
+</tr>
+<tr>
+<td><code>Polyline</code></td>
+<td><code>points: list[Point]</code></td>
+<td>Open path</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td><code>width: int</code>, <code>height: int</code></td>
+<td>Pixel dimensions</td>
+</tr>
+<tr>
+<td><code>CallbackInfo</code></td>
+<td><code>url: str</code>, <code>token: str</code></td>
+<td>Sectra callback credentials, from the invocation</td>
+</tr>
+<tr>
+<td><code>ApplicationInfo</code></td>
+<td><code>apiVersion: str</code>, <code>softwareVersion: str</code></td>
+<td>Reported by the server</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="image">Image</h2>
+<h3 id="imagemetadata"><code>ImageMetadata</code></h3>
+<p>Full slide metadata: pixel size, tile format, focal planes, optical paths, staining, and more. Returned by <code>SectraClient.get_image_metadata()</code>.</p>
+<h3 id="caseimageinfo"><code>CaseImageInfo</code></h3>
+<p>Lightweight summary of a slide within a case. Returned by <code>get_image_infos_in_case*()</code>.</p>
+<h3 id="labelimage"><code>LabelImage</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">label</span><span class="p">:</span> <span class="n">LabelImage</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_label_image</span><span class="p">(</span><span class="n">slide_id</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">pil_image</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">convert_to_pil</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="invocation">Invocation</h2>
+<p>Sectra POSTs an <code>Invocation</code> to your webhook. It is a <strong>discriminated union</strong> on the <code>action</code> field.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sectra_client.schemas.invocation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Invocation</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/sectra/hook&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">hook</span><span class="p">(</span><span class="n">invocation</span><span class="p">:</span> <span class="n">Invocation</span><span class="p">):</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">match</span> <span class="n">invocation</span><span class="p">:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="k">case</span> <span class="n">CreateInvocation</span><span class="p">():</span>          <span class="o">...</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="k">case</span> <span class="n">ModifyInvocation</span><span class="p">():</span>          <span class="o">...</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="k">case</span> <span class="n">CancelInvocation</span><span class="p">():</span>          <span class="o">...</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="k">case</span> <span class="n">DeleteInvocation</span><span class="p">():</span>          <span class="o">...</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="k">case</span> <span class="n">NewImageFilesInvocation</span><span class="p">():</span>   <span class="o">...</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th><code>action</code></th>
+<th>Key extra fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CreateInvocation</code></td>
+<td><code>CREATE</code></td>
+<td><code>input: CreateInput</code></td>
+</tr>
+<tr>
+<td><code>ModifyInvocation</code></td>
+<td><code>MODIFY</code></td>
+<td><code>input: ResultResponse</code> (existing result to update)</td>
+</tr>
+<tr>
+<td><code>CancelInvocation</code></td>
+<td><code>CANCEL</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>DeleteInvocation</code></td>
+<td><code>DELETE</code></td>
+<td><code>input: ResultResponse</code> (result to delete)</td>
+</tr>
+<tr>
+<td><code>NewImageFilesInvocation</code></td>
+<td><code>NEW_IMAGE_FILES</code></td>
+<td><code>imageInfo: ImageMetadata</code></td>
+</tr>
+</tbody>
+</table>
+<p>All invocations share: <code>applicationId</code>, <code>slideId</code>, <code>callbackInfo</code>.</p>
+<h3 id="createinput"><code>CreateInput</code></h3>
+<p>Another discriminated union on <code>type</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th><code>type</code></th>
+<th>Extra fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WholeSlideInput</code></td>
+<td><code>WHOLE_SLIDE</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TaggedPolygonInput</code></td>
+<td><code>TAGGED_POLYGON</code></td>
+<td><code>content: TaggedPolygonContent</code></td>
+</tr>
+<tr>
+<td><code>MultiAreaInput</code></td>
+<td><code>MULTI_AREA</code></td>
+<td><code>content: MultiAreaContent</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="image-notifications">Image notifications</h3>
+<p><code>NewImageFilesInvocation</code> (<code>action: "newImageFiles"</code>) is sent when new image files are imported for a slide, so your app can decide whether the slide is worth analysing. Unlike the other four actions it carries the slide's full <code>imageInfo</code> (PHI-free) up front.</p>
+<p>It does not arrive on the URL you registered, as Sectra appends <code>/imagenotification</code> to it:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Delivered to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create</code> / <code>modify</code> / <code>cancel</code> / <code>delete</code></td>
+<td>the registered URL, e.g. <code>/sectra/hook</code></td>
+</tr>
+<tr>
+<td><code>newImageFiles</code></td>
+<td><code>&lt;registered URL&gt;/imagenotification</code></td>
+</tr>
+</tbody>
+</table>
+<p>So an app needs a second route.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/sectra/hook&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">hook</span><span class="p">(</span><span class="n">invocation</span><span class="p">:</span> <span class="n">Invocation</span><span class="p">):</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="o">...</span>                        <span class="c1"># create / modify / cancel / delete</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/sectra/hook/imagenotification&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">image_notification</span><span class="p">(</span><span class="n">invocation</span><span class="p">:</span> <span class="n">NewImageFilesInvocation</span><span class="p">):</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="k">if</span> <span class="n">invocation</span><span class="o">.</span><span class="n">imageInfo</span><span class="o">.</span><span class="n">micronsPerPixel</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="k">return</span> <span class="p">{}</span>              <span class="c1"># too low-res for us — ignore</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="o">...</span>                        <span class="c1"># otherwise queue the analysis</span>
+</code></pre></div>
+<p>To simulate one in local development, use <a href="../mock-server/"><code>MockSectraServer.notify()</code></a>: it builds the payload from the mock's own slide metadata, so the notification always agrees with what the mock later serves.</p>
+<p>Pass the registered URL — <code>notify()</code> appends <code>/imagenotification</code> itself, just like Sectra.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">mock</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">webhook_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/sectra/hook&quot;</span><span class="p">,</span> <span class="n">slide_id</span><span class="o">=</span><span class="s2">&quot;slide-001&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>See <code>examples/image_notification.py</code> for a runnable end-to-end triage example.</p>
+<hr />
+<h2 id="results">Results</h2>
+<h3 id="building-a-result">Building a result</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Result</span><span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">slideId</span><span class="o">=...</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">displayResult</span><span class="o">=</span><span class="s2">&quot;Human-readable label&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">displayProperties</span><span class="o">=</span><span class="n">DisplayProperties</span><span class="p">({</span><span class="s2">&quot;Key&quot;</span><span class="p">:</span> <span class="s2">&quot;Value&quot;</span><span class="p">}),</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">applicationVersion</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">data</span><span class="o">=</span><span class="n">ResultData</span><span class="p">(</span><span class="n">result</span><span class="o">=&lt;</span><span class="n">PrimitiveResultContent</span> <span class="ow">or</span> <span class="n">PatchResultContent</span><span class="o">&gt;</span><span class="p">),</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span>
+</code></pre></div>
+<h3 id="primitiveresultcontent"><code>PrimitiveResultContent</code></h3>
+<p>A list of drawable items (polygons, polylines, labels).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">PrimitiveResultContent</span><span class="p">(</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="n">PrimitiveItem</span><span class="p">(</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>            <span class="n">polygons</span><span class="o">=</span><span class="p">[</span><span class="n">Polygon</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])],</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>            <span class="n">style</span><span class="o">=</span><span class="n">Style</span><span class="p">(</span><span class="n">strokeStyle</span><span class="o">=</span><span class="s2">&quot;#FF0000&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fillStyle</span><span class="o">=</span><span class="s2">&quot;#FF000033&quot;</span><span class="p">),</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">]</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Key fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PrimitiveItem</code></td>
+<td><code>polygons</code>, <code>polylines</code>, <code>labels</code>, <code>style</code></td>
+</tr>
+<tr>
+<td><code>Style</code></td>
+<td><code>strokeStyle: str</code> (CSS color), <code>fillStyle: str</code>, <code>size: int</code></td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>text: str</code>, <code>position: Point</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="patchresultcontent"><code>PatchResultContent</code></h3>
+<p>A grid of classified patches over the slide.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">PatchResultContent</span><span class="p">(</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">content</span><span class="o">=</span><span class="n">PatchContent</span><span class="p">(</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="n">patches</span><span class="o">=</span><span class="p">[</span><span class="n">Patch</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">sortKeyValue</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)],</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Negative&quot;</span><span class="p">,</span> <span class="s2">&quot;Uncertain&quot;</span><span class="p">,</span> <span class="s2">&quot;Positive&quot;</span><span class="p">],</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="n">patchSize</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="n">magnification</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="o">...</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="p">)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Key fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PatchContent</code></td>
+<td><code>patches</code>, <code>tags</code>, <code>polygons</code>, <code>actions</code>, <code>patchSize</code>, <code>magnification</code>, <code>statuses</code></td>
+</tr>
+<tr>
+<td><code>Patch</code></td>
+<td><code>tag: int</code>, <code>position: Point</code>, <code>sortKeyValue: float</code></td>
+</tr>
+<tr>
+<td><code>Action</code></td>
+<td><code>id</code>, <code>name</code>, <code>tooltip</code>, <code>state</code></td>
+</tr>
+<tr>
+<td><code>Status</code></td>
+<td><code>value: bool</code>, <code>message: str</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="resultresponse"><code>ResultResponse</code></h3>
+<p>Returned by <code>create_results()</code> and <code>get_*results*()</code>. Extends <code>Result</code> with:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>int</code></td>
+<td>Assigned result ID</td>
+</tr>
+<tr>
+<td><code>versionId</code></td>
+<td><code>str</code></td>
+<td>Required for updates (optimistic concurrency)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="adaptedresult"><code>AdaptedResult</code></h3>
+<p>Used with <code>update_results()</code>. Same fields as <code>Result</code>, plus <code>versionId: str</code>.</p>
+<hr />
+<h2 id="quality-control">Quality control</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sectra_client.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">QualityControl</span><span class="p">,</span> <span class="n">QualityControlData</span><span class="p">,</span> <span class="n">QualityControlStatus</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">client</span><span class="o">.</span><span class="n">set_quality_control</span><span class="p">(</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">slide_id</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">QualityControl</span><span class="p">(</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="n">applicationVersion</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">qualityControl</span><span class="o">=</span><span class="n">QualityControlData</span><span class="p">(</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>            <span class="n">status</span><span class="o">=</span><span class="n">QualityControlStatus</span><span class="o">.</span><span class="n">QUALITY_OK</span><span class="p">,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>            <span class="n">versionId</span><span class="o">=</span><span class="n">current_version_id</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="p">),</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="p">),</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th><code>QualityControlStatus</code></th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NOT_SET</code></td>
+<td>Default, no decision</td>
+</tr>
+<tr>
+<td><code>QUALITY_OK</code></td>
+<td>Slide accepted</td>
+</tr>
+<tr>
+<td><code>REJECTED</code></td>
+<td>Slide rejected</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

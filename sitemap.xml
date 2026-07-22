@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://amspath.github.io/sectra-image-analysis-api/</loc>
+         <lastmod>2026-07-22</lastmod>
+    </url>
+    <url>
+         <loc>https://amspath.github.io/sectra-image-analysis-api/quickstart/</loc>
+         <lastmod>2026-07-22</lastmod>
+    </url>
+    <url>
+         <loc>https://amspath.github.io/sectra-image-analysis-api/api/client/</loc>
+         <lastmod>2026-07-22</lastmod>
+    </url>
+    <url>
+         <loc>https://amspath.github.io/sectra-image-analysis-api/api/mock-server/</loc>
+         <lastmod>2026-07-22</lastmod>
+    </url>
+    <url>
+         <loc>https://amspath.github.io/sectra-image-analysis-api/api/schemas/</loc>
+         <lastmod>2026-07-22</lastmod>
+    </url>
+</urlset>
