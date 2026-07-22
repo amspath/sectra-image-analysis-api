@@ -71,6 +71,9 @@ from sectra_client import SectraClient
 from sectra_client.schemas import Result, ResultData, Invocation, PrimitiveResultContent, CreateInvocation
 
 app = FastAPI()
+# create/modify/cancel/delete land on the URL you registered. If your app is also
+# registered for image notifications, those land on /sectra/hook/imagenotification
+# instead — see docs/api/schemas.md#image-notifications.
 @app.post("/sectra/hook")
 def hook(invocation: Invocation, background_tasks: BackgroundTasks):
     background_tasks.add_task(run_analysis, invocation)

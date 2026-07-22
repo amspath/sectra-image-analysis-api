@@ -78,18 +78,31 @@ Another discriminated union on `type`:
 
 `NewImageFilesInvocation` (`action: "newImageFiles"`) is sent when new image files are imported for a slide, so your app can decide whether the slide is worth analysing. Unlike the other four actions it carries the slide's full `imageInfo` (PHI-free) up front, so the decision needs no API calls.
 
-Sectra delivers it to whatever URL you registered, so it normally arrives on the same webhook as everything else.
+It does **not** arrive on the URL you registered. Sectra appends `/imagenotification` to it:
+
+| Action | Delivered to |
+|---|---|
+| `create` / `modify` / `cancel` / `delete` | the registered URL, e.g. `/sectra/hook` |
+| `newImageFiles` | `<registered URL>/imagenotification` |
+
+So an app needs a second route. Without it, notifications 404 silently.
 
 ```python
 @app.post("/sectra/hook")
 def hook(invocation: Invocation):
-    if isinstance(invocation, NewImageFilesInvocation):
-        if invocation.imageInfo.micronsPerPixel > 0.5:
-            return {}          # too low-res for us — ignore
-        ...                    # otherwise queue the analysis
+    ...                        # create / modify / cancel / delete
+
+
+@app.post("/sectra/hook/imagenotification")
+def image_notification(invocation: NewImageFilesInvocation):
+    if invocation.imageInfo.micronsPerPixel > 0.5:
+        return {}              # too low-res for us — ignore
+    ...                        # otherwise queue the analysis
 ```
 
 To simulate one in local development, use [`MockSectraServer.notify()`](mock-server.md): it builds the payload from the mock's own slide metadata, so the notification always agrees with what the mock later serves.
+
+Pass the registered URL — `notify()` appends `/imagenotification` itself, just like Sectra.
 
 ```python
 mock.notify(webhook_url="http://localhost:8000/sectra/hook", slide_id="slide-001")
