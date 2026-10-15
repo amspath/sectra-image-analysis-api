@@ -15,7 +15,7 @@ class InputTemplate(BaseModel):
     """Model for input templates."""
 
     type: InputType
-    content: Optional[TaggedPolygonInputContent] = None
+    content: Optional[TaggedPolygonInputContent] = Field(default=None, exclude_if=lambda v: v is None)
 
 
 class Registration(BaseModel):

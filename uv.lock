@@ -1071,7 +1071,7 @@ requires-dist = [
     { name = "hl7", specifier = ">=0.4.5" },
     { name = "honcho", marker = "extra == 'dev'", specifier = ">=2.0.0" },
     { name = "pillow", specifier = ">=10.0.0" },
-    { name = "pydantic", specifier = ">=2.0.0" },
+    { name = "pydantic", specifier = ">=2.11.0" },
     { name = "requests", specifier = ">=2.28.0" },
     { name = "requests-toolbelt", specifier = ">=1.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.12.5" },
