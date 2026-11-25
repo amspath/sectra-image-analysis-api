@@ -29,9 +29,19 @@ _INFO_TTL_SECONDS = 3600
 _info_cache: dict[str, tuple[float, ApplicationInfo]] = {}
 
 class SectraClient:
-    __slots__ = ("_url", "_token", "version_info", "_headers", "_session")
+    __slots__ = ("_url", "_token", "version_info", "_headers", "_session", "_timeout")
 
-    def __init__(self, url: str, token: str, _allow_http: bool = False) -> None:
+    def __init__(
+        self, url: str, token: str, _allow_http: bool = False, timeout: float | tuple[float, float] = (5, 60)
+    ) -> None:
+        """Connect to a Sectra server.
+
+        Args:
+            url (str): Base url of the server
+            token (str): Bearer token
+            timeout (float | tuple[float, float]): Seconds to wait for a connection and between
+                two reads of a response, as for requests. Defaults to 5 and 60.
+        """
         # Normalize base url
         parts = urlsplit(url.strip())
 
@@ -43,6 +53,7 @@ class SectraClient:
         self._url = base
 
         self._token = token
+        self._timeout = timeout
         self._headers = {"Authorization": f"Bearer {token}"}
 
         self._session = requests.Session()
@@ -68,7 +79,7 @@ class SectraClient:
     @connection_retry()
     def _get(self, path: str, **kwargs) -> JSONPayload:
         url = f"{self._url}{path}"
-        resp = self._session.get(url, params=kwargs)  # headers already on session
+        resp = self._session.get(url, params=kwargs, timeout=self._timeout)  # headers already on session
         if resp.status_code != 200:
             raise SectraRequestError(resp.status_code, resp.text, path)
         return resp.json()
@@ -76,7 +87,7 @@ class SectraClient:
     @connection_retry()
     def _get_raw(self, path: str, **kwargs) -> requests.Response:
         url = f"{self._url}{path}"
-        resp = self._session.get(url, params=kwargs)
+        resp = self._session.get(url, params=kwargs, timeout=self._timeout)
         if resp.status_code != 200:
             raise SectraRequestError(resp.status_code, resp.text, path)
         return resp
@@ -84,7 +95,7 @@ class SectraClient:
     @connection_retry()
     def _post(self, path: str, payload: JSONPayload, parse_response: bool = True) -> Optional[JSONPayload]:
         url = f"{self._url}{path}"
-        resp = self._session.post(url, json=payload)
+        resp = self._session.post(url, json=payload, timeout=self._timeout)
         if resp.status_code != 201:
             raise SectraRequestError(resp.status_code, resp.text, path)
         if parse_response:
@@ -94,7 +105,7 @@ class SectraClient:
     @connection_retry()
     def _put(self, path: str, values: JSONPayload, parse_response: bool = True) -> Optional[JSONPayload]:
         url = f"{self._url}{path}"
-        resp = self._session.put(url, json=values)
+        resp = self._session.put(url, json=values, timeout=self._timeout)
         if resp.status_code != 200:
             raise SectraRequestError(resp.status_code, resp.text, path)
         if parse_response:
